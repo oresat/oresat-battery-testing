@@ -1,0 +1,4 @@
+(sym_lib_table
+  (lib (name "relay")(type "KiCad")(uri "/home/benjamin/Documents/school/ECE212/thelayoutthingyforaprojecttomakefood/relay.kicad_sym")(options "")(descr ""))
+  (lib (name "mosfet")(type "KiCad")(uri "/home/benjamin/Documents/school/ECE212/thelayoutthingyforaprojecttomakefood/mosfet.kicad_sym")(options "")(descr ""))
+)
