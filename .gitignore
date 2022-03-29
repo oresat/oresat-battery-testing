@@ -24,3 +24,6 @@ fp-info-cache
 # Exported BOM files
 *.xml
 *.csv
+
+# some backup stuff
+battery-test-board/battery-test-board-backups
