@@ -2,4 +2,5 @@
   (lib (name "relay")(type "KiCad")(uri "${KIPRJMOD}/relay.pretty")(options "")(descr ""))
   (lib (name "batt")(type "KiCad")(uri "${KIPRJMOD}/batt.pretty")(options "")(descr ""))
   (lib (name "oresat-logo")(type "KiCad")(uri "${KIPRJMOD}/oresat-logo.pretty")(options "")(descr ""))
+  (lib (name "thermister")(type "KiCad")(uri "${KIPRJMOD}/thermister.pretty")(options "")(descr ""))
 )
