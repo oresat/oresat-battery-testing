@@ -55,7 +55,12 @@
           "width": 0.0
         }
       ],
-      "drc_exclusions": [],
+      "drc_exclusions": [
+        "clearance|165885828|84466257|97cd2e8c-f51c-473e-8429-0fe837c4ca7e|88e094ed-02c5-45f5-b161-7107c3f6e7c9",
+        "silk_over_copper|167640000|119344990|4f6dd014-d53f-4535-9e68-bc6029038e0c|7dad73d4-d0a7-489d-9860-2c801eff1c0b",
+        "silk_over_copper|167640000|49944990|4f6dd014-d53f-4535-9e68-bc6029038e0c|134f31cd-777c-44bc-a7ac-336555f8c3af",
+        "via_dangling|166000000|85000000|97cd2e8c-f51c-473e-8429-0fe837c4ca7e|00000000-0000-0000-0000-000000000000"
+      ],
       "meta": {
         "version": 2
       },
@@ -347,7 +352,7 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "breakout.kicad_pro",
+    "filename": "labjack-connector.kicad_pro",
     "version": 1
   },
   "net_settings": {
