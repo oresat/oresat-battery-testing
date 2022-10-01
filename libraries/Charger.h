@@ -3,8 +3,8 @@
 
 #include <python3.8/Python.h>
 #include <python3.8/structmember.h>
-#include "libb6/Device.hh"
-#include "libb6/Enum.hh"
+#include "Device.hh"
+#include "Enum.hh"
 
 // Charger type
 typedef struct {
