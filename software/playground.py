@@ -41,7 +41,7 @@ if (check.upper == 'Y'):
 
 for x in range(5):
     #time.sleep(1)
-    voltage = bb.cellVolts #don't actually know what bb.cellVolts is measuring (gives four voltage values?)
+    voltage = bb.cellVolts 
     date = stamper()
     print(str(voltage))
     print(str(date))
