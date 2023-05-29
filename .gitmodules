@@ -1,0 +1,3 @@
+[submodule "libraries/libb6"]
+	path = libraries/libb6
+	url = https://github.com/maciek134/libb6
