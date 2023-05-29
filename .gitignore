@@ -34,3 +34,9 @@ fp-info-cache
 *.xml
 *.csv
 
+# vim
+*.swp
+
+# gcc/g++
+*.o
+*.so

@@ -1,10 +1,10 @@
 #ifndef CHARGER_H
 #define CHARGER_H
 
-#include <python3.8/Python.h>
-#include <python3.8/structmember.h>
-#include "Device.hh"
-#include "Enum.hh"
+#include <Python.h>
+#include <structmember.h>
+#include "libb6/Device.hh"
+#include "libb6/Enum.hh"
 
 // Charger type
 typedef struct {
