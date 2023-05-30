@@ -17,8 +17,8 @@ LIBB6_SOURCES = \
 	$(LIBB6_SRC)/Device.cc \
 	$(LIBB6_SRC)/Packet.cc
 
-CFLAGS = -std=c++11 -fPIC $(INC_DIRS) $(shell pkg-config --cflags --libs libusb-1.0) $(shell python-config --cflags)
-LDFLAGS = -lusb-1.0 $(shell python-config --ldflags)
+CFLAGS = -std=c++11 -fPIC $(INC_DIRS) $(shell pkg-config --cflags --libs libusb-1.0) $(shell python3-config --cflags)
+LDFLAGS = -lusb-1.0 $(shell python3-config --ldflags)
 
 OBJS = $(PYLIB_SOURCES:%.cpp=$(BUILD_DIR)/%.o) $(LIBB6_SOURCES:%.cc=$(BUILD_DIR)/%.o)
 
