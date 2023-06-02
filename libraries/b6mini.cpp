@@ -1,13 +1,10 @@
 #define PY_SSIZE_T_CLEAN
-#include <python3.8/Python.h>
-#include <python3.8/structmember.h>
+#include <Python.h>
+#include <structmember.h>
 #include <iostream>
-
-// #include <iostream>
 #include "libb6/Device.hh"
 #include "libb6/Packet.hh"
 #include "libb6/Enum.hh"
-
 #include "Charger.h"
 
 static PyMethodDef b6miniMethods[] = {
