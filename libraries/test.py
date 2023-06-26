@@ -11,6 +11,7 @@ print()
 ci = c.getChargeInfo()
 print(ci)
 print()
+print("TESTESTEST")
 
 cp = c.getDefaultChargeProfile("LiPo")
 print(cp.getTypeString())
