@@ -20,3 +20,5 @@ cp.chargeCurrent = 128
 print(cp)
 
 c.startCharging(cp);
+
+#each charger only charges one cell at a time
