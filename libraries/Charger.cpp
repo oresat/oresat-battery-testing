@@ -1,8 +1,7 @@
+#include "libb6/Device.hh"
+#include "libb6/Packet.hh"
+#include "libb6/Enum.hh"
 #include "Charger.h"
-
-#include "Device.hh"
-#include "Packet.hh"
-#include "Enum.hh"
 
 #define BOOL(b) ((b) ? "True" : "False")
 
