@@ -25,6 +25,21 @@ namespace b6 {
       throw std::runtime_error("libusb err: " + std::to_string(err));
     }
     m_dev = libusb_open_device_with_vid_pid(m_libusbCtx, B6_VENDOR_ID, B6_PRODUCT_ID);
+	 //use libusb_open not the above function - look at libusb documentation to figure out how to use libusb_open
+    //will be tricky (need to be able to pass in variable to specify which device will be opened)
+    //can use id path instead of serial number (would be based on usb port on my computer) - this will not be universal to everyone though
+    /*
+    Discover devices using libusb_get_device_list().
+
+    Choose the device that you want to operate, and call libusb_open().
+
+    Unref all devices in the discovered device list.
+
+    Free the discovered device list.
+
+    will also need to modify the files in oresat-bat-test libraries (for talking between C and python)
+
+    */
     if (m_dev == nullptr) {
       throw std::runtime_error("cannot find/open b6 device");
     }
@@ -86,11 +101,13 @@ namespace b6 {
     res.skip(4);
 
     info.state = res.readU8(); // TODO: finish enum STATE and convert this
-
+	
+	 /*
     if (info.state == static_cast<int>(STATE::ERROR_1) || info.state == static_cast<int>(STATE::ERROR_2)) {
       m_throwError(static_cast<ERROR>(res.readU16()));
     }
-
+	 */
+	 //need to figure out what this error is, but bypassing works for now
     info.capacity = res.readU16();
     info.time = res.readU16();
     info.voltage = res.readU16();

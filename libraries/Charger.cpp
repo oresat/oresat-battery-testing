@@ -12,7 +12,7 @@
 // ██      ███████ ███████ ██████  ██   ███ █████   ██████
 // ██      ██   ██ ██   ██ ██   ██ ██    ██ ██      ██   ██
 //  ██████ ██   ██ ██   ██ ██   ██  ██████  ███████ ██   ██
-
+//
 PyMemberDef Charger_members[] = {
   {"number", T_INT, offsetof(ChargerObject, number), 0,
      "charger number"},

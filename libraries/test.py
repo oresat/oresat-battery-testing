@@ -11,6 +11,7 @@ print()
 ci = c.getChargeInfo()
 print(ci)
 print()
+print("TESTESTEST")
 
 cp = c.getDefaultChargeProfile("LiPo")
 print(cp.getTypeString())
@@ -19,3 +20,5 @@ cp.chargeCurrent = 128
 print(cp)
 
 c.startCharging(cp);
+
+#each charger only charges one cell at a time
