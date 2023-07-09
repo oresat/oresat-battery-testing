@@ -16,7 +16,7 @@ V1.0 of the PCB layout:
 ### Udev Setup
 Copy the .rules file (from the Documentation folder) into the folder on your computer which contains rules files for udev.
 
-For me it is: Computer/etc/udev/rules.d
+For me it is: /etc/udev/rules.d
 
 This will allow you to run test.py without requiring sudo.
 
