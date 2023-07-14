@@ -102,12 +102,12 @@ namespace b6 {
 
     info.state = res.readU8(); // TODO: finish enum STATE and convert this
 	
-	 /*
+	 
     if (info.state == static_cast<int>(STATE::ERROR_1) || info.state == static_cast<int>(STATE::ERROR_2)) {
       m_throwError(static_cast<ERROR>(res.readU16()));
+	 	//need to figure out what this error is, but bypassing works for now - looks like this error might have solved itself
     }
-	 */
-	 //need to figure out what this error is, but bypassing works for now
+	 
     info.capacity = res.readU16();
     info.time = res.readU16();
     info.voltage = res.readU16();
