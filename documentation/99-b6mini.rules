@@ -1,2 +1,10 @@
 SUBSYSTEM=="usb", ATTRS{idVendor}=="0000", ATTRS{idProduct}=="0001", MODE:="666", GROUP="plugdev"
 KERNEL=="hidraw*", ATTRS{idVendor}=="0000", ATTRS{idProduct}=="0001", MODE:="666", GROUP="plugdev"
+
+#replace DEVPATH with correct port numbers
+#This is the udev rule for the chargers:
+#CHARGER0 is the one marked A on the board, 1 is B, 2 is C, 3 is D
+SUBSYSTEM=="tty",   DEVPATH=="*1.5.4.1*". SYMLINK+="ttyCHARGER0"
+SUBSYSTEM=="tty",   DEVPATH=="*1.5.4.2*". SYMLINK+="ttyCHARGER1"
+SUBSYSTEM=="tty",   DEVPATH=="*3.5.4.3*". SYMLINK+="ttyCHARGER2"
+SUBSYSTEM=="tty",   DEVPATH=="*1.5.4.3*". SYMLINK+="ttyCHARGER3"
