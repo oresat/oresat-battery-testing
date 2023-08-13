@@ -16,7 +16,7 @@
 
 #include<stdio.h>
 
-#include <libusb-1.0/libusb.h>
+#include<libusb.h>
 
 static void print_devs(libusb_device **devs)
 {
@@ -52,7 +52,7 @@ int main(void)
 	int r;
 	ssize_t cnt;
 
-	r = libusb_init_context(/*ctx=*/NULL, /*options=*/NULL, /*num_options=*/0);
+	r = libusb_init(NULL);//_context
 	if (r < 0)
 		return r;
 
