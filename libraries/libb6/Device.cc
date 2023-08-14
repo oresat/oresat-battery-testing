@@ -21,7 +21,7 @@
 namespace b6 {
 //****
 	Device::Device(const uint8_t * path_array, int path_length) {
-
+	bool flag = false;//check if we've found the correct charger
 	libusb_device *dev;
 	libusb_device **devs;
 	int i = 0, j = 0;
@@ -45,11 +45,14 @@ namespace b6 {
 
 		err = libusb_get_port_numbers(dev, path, path_length);
 		if (err > 0) {
+			flag = true;
 			for (j = 1; j < err; j++) {
 				if (path[j] != path_array[j]) {
+					flag = false;
 					break;	
 				}
 			}
+			if (flag) break;
 		}
 	}
 	if (dev == nullptr) throw std::runtime_error("libusb did not find device");

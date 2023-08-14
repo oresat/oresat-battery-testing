@@ -82,8 +82,10 @@ PyObject* Charger_new(PyTypeObject* type, PyObject* args, PyObject* kwds) {
 
 int Charger_init(ChargerObject* self, PyObject * path, PyObject* args, PyObject* kwds) {
 	uint8_t empty_array[PyList_Size(path)];
+	printf("%d\n", PyList_Size(path));
  	for (int i = 0; i < PyList_Size(path); i++) {
 		empty_array[i] = (uint8_t)PyLong_AsUnsignedLong(PyList_GetItem(path, (Py_ssize_t)i));
+		printf("%d\n", empty_array[i]);
  	}
  	self->charger = new b6::Device(empty_array, PyList_Size(path));
  	return 0;

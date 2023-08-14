@@ -23,7 +23,10 @@ def __init__(self, name: str):
                 timeout = self.TIMEOUT,
                 )
 """
-c = b6mini.Charger()#pass in the path to this function, modify C code that takes in C code, and modify Python bindings file
+
+#This isn't working due to (likely) an extension problem.
+
+c = b6mini.Charger([1,2]) #pass in array of port numbers
 print(c)
 print()
 
