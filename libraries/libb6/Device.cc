@@ -19,7 +19,61 @@
 #include "Device.hh"
 
 namespace b6 {
-  Device::Device() {
+//****
+	Device::Device(const uint8_t * path_array, int path_length) {
+
+	libusb_device *dev;
+	libusb_device **devs;
+	int i = 0, j = 0;
+	uint8_t path[8]; 
+    int err = libusb_init(&m_libusbCtx);
+    if (err != 0) {
+      throw std::runtime_error("libusb err: " + std::to_string(err));
+    }
+	
+	 err = libusb_get_device_list(NULL, &devs);
+    if (err < 0) {
+      throw std::runtime_error("libusb err: " + std::to_string(err));
+    }
+
+	while ((dev = devs[i++]) != NULL) {
+		struct libusb_device_descriptor desc;
+		err = libusb_get_device_descriptor(dev, &desc);
+		if (err < 0) {
+      	throw std::runtime_error("libusb err: " + std::to_string(err));
+		}
+
+		err = libusb_get_port_numbers(dev, path, path_length);
+		if (err > 0) {
+			for (j = 1; j < err; j++) {
+				if (path[j] != path_array[j]) {
+					break;	
+				}
+			}
+		}
+	}
+	if (dev == nullptr) throw std::runtime_error("libusb did not find device");
+    err = libusb_open(dev, & m_dev);//Device_Names.c contents will be in here
+    if (err < 0) {
+      throw std::runtime_error("cannot find/open b6 device");
+    }
+
+    if (libusb_kernel_driver_active(m_dev, 0) == 1) {
+      m_hadKernelDriver = true;
+      err = libusb_detach_kernel_driver(m_dev, 0);
+      if (err != 0) {
+        throw std::runtime_error("cannot detach kernel driver, err: " + std::to_string(err));
+      }
+    }
+    err = libusb_claim_interface(m_dev, 0);
+    if (err != 0) {
+      throw std::runtime_error("cannot claim interface 0, err: " + std::to_string(err));
+    }
+
+    m_getDevInfo();
+  }
+//****
+  Device::Device(/*modify to take a path*/) {
     int err = libusb_init(&m_libusbCtx);
     if (err != 0) {
       throw std::runtime_error("libusb err: " + std::to_string(err));

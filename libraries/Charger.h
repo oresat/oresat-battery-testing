@@ -17,7 +17,7 @@ typedef struct {
 void Charger_dealloc(ChargerObject* self);
 PyObject* Charger_str(PyObject *self);
 PyObject* Charger_new(PyTypeObject* type, PyObject* args, PyObject* kwds);
-int Charger_init(ChargerObject* self, PyObject* args, PyObject* kwds);
+int Charger_init(ChargerObject* self, PyObject * path, PyObject* args, PyObject* kwds);//edited
 
 PyObject* Charger_test(ChargerObject* self, PyObject *Py_UNUSED(ignored));
 

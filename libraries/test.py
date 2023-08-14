@@ -23,7 +23,7 @@ def __init__(self, name: str):
                 timeout = self.TIMEOUT,
                 )
 """
-c = b6mini.Charger()
+c = b6mini.Charger()#pass in the path to this function, modify C code that takes in C code, and modify Python bindings file
 print(c)
 print()
 

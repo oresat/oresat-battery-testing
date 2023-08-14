@@ -54,6 +54,7 @@ namespace b6 {
   class Device {
   public:
     Device();
+	 Device(const uint8_t * path_array, int path_length);//new addition
     ~Device();
     SysInfo getSysInfo();
     ChargeInfo getChargeInfo();

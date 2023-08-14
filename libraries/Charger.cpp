@@ -80,9 +80,13 @@ PyObject* Charger_new(PyTypeObject* type, PyObject* args, PyObject* kwds) {
   return (PyObject*) self;
 }
 
-int Charger_init(ChargerObject* self, PyObject* args, PyObject* kwds) {
-  self->charger = new b6::Device();
-  return 0;
+int Charger_init(ChargerObject* self, PyObject * path, PyObject* args, PyObject* kwds) {
+	uint8_t empty_array[PyList_Size(path)];
+ 	for (int i = 0; i < PyList_Size(path); i++) {
+		empty_array[i] = (uint8_t)PyLong_AsUnsignedLong(PyList_GetItem(path, (Py_ssize_t)i));
+ 	}
+ 	self->charger = new b6::Device(empty_array, PyList_Size(path));
+ 	return 0;
 }
 
 PyObject* Charger_test(ChargerObject* self, PyObject *Py_UNUSED(ignored)) {
