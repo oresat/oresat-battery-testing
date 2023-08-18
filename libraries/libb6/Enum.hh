@@ -21,6 +21,7 @@
 
 #include <cstdint>
 
+//Enums add titles to ints.
 namespace b6 {
   enum class CMD : uint8_t {
     GET_DEV_INFO            = 0x57,

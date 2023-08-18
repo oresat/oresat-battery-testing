@@ -31,6 +31,7 @@
 #define B6_PRODUCT_ID 0x0001
 
 namespace b6 {
+	//Storage struct
   struct SysInfo {
     unsigned int cycleTime, timeLimit, capLimit, lowDCLimit, tempLimit, voltage, cells[8];
     bool timeLimitOn, capLimitOn, keyBuzzer, systemBuzzer;
@@ -51,10 +52,12 @@ namespace b6 {
     uint16_t chargeCurrent, dischargeCurrent, cellDischargeVoltage, endVoltage, trickleCurrent;
   };
 
+  //Class governs chargers.
   class Device {
   public:
     Device();
-	 Device(const uint8_t * path_array, int path_length);//new addition
+	 //Device(const uint8_t * path_array, int path_length);//new addition
+	 //Device(const std::string & location);//new addition
     ~Device();
     SysInfo getSysInfo();
     ChargeInfo getChargeInfo();

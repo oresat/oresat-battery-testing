@@ -1,31 +1,11 @@
-import b6mini
+import libb6
+
+
+x = libb6.BATTERY_TYPE.LIPO
+print(x);
 #Disambiguate chargers via USB slot
+
 """
-import serial
-import serial.tools.list_ports
-
-def __init__(self, name: str):
-    '''construct object, pass in usb device name. ttyA/ttyB/ttyC/ttyD'''
-    serial_port = None
-    for i in serial.tools.list_ports.comports():
-        if i.name == name:
-            serial_port = i.device
-            break
-        if serial_port is None:
-            raise Exception(f'Could not find device with id of {name}')
-
-        self.ser = serial.Serial(
-                port=serial_port,
-                baudrate = self.BAUDRATE,
-                parity = self.PARITY,
-                stopbits = self.STOPBITS,
-                bytesize = self.BYTESIZE,
-                timeout = self.TIMEOUT,
-                )
-"""
-
-#This isn't working due to (likely) an extension problem.
-
 c = b6mini.Charger([1,2]) #pass in array of port numbers
 print(c)
 print()
@@ -48,3 +28,4 @@ print(cp)
 c.startCharging(cp);
 
 #each charger only charges one cell at a time
+"""

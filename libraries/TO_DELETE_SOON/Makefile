@@ -1,8 +1,7 @@
-
 PYLIB_SRC = .
 LIBB6_SRC = libb6
 
-LINK_TARGET = libb6.so
+LINK_TARGET = b6mini.so
 
 INC_DIRS = \
 	-I$(PYLIB_SRC) \
@@ -11,14 +10,15 @@ INC_DIRS = \
 BUILD_DIR = build
 
 PYLIB_SOURCES = \
-	$(PYLIB_SRC)/binding.cpp
+	$(PYLIB_SRC)/b6mini.cpp \
+	$(PYLIB_SRC)/Charger.cpp
 
 LIBB6_SOURCES = \
 	$(LIBB6_SRC)/Device.cc \
 	$(LIBB6_SRC)/Packet.cc
 
-CFLAGS = -std=c++11 -fPIC $(INC_DIRS) $(shell pkg-config --cflags --libs libusb-1.0) $(shell python3 -m pybind11 --includes)
-LDFLAGS = -lusb-1.0 #$(shell python3-config --ldflags)
+CFLAGS = -std=c++11 -fPIC $(INC_DIRS) $(shell pkg-config --cflags --libs libusb-1.0) $(shell python3-config --cflags)
+LDFLAGS = -lusb-1.0 $(shell python3-config --ldflags)
 
 OBJS = $(PYLIB_SOURCES:%.cpp=$(BUILD_DIR)/%.o) $(LIBB6_SOURCES:%.cc=$(BUILD_DIR)/%.o)
 

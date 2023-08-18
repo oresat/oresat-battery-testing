@@ -20,7 +20,7 @@
 
 namespace b6 {
 //****
-	Device::Device(const uint8_t * path_array, int path_length) {
+/*	Device::Device(const uint8_t * path_array, int path_length) {
 	bool flag = false;//check if we've found the correct charger
 	libusb_device *dev;
 	libusb_device **devs;
@@ -75,6 +75,8 @@ namespace b6 {
 
     m_getDevInfo();
   }
+
+*/
 //****
   Device::Device(/*modify to take a path*/) {
     int err = libusb_init(&m_libusbCtx);
