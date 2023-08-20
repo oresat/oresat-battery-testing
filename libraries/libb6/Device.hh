@@ -56,8 +56,8 @@ namespace b6 {
   class Device {
   public:
     Device();
-	 //Device(const uint8_t * path_array, int path_length);//new addition
-	 //Device(const std::string & location);//new addition
+
+	 Device(const std::string & location);
     ~Device();
     SysInfo getSysInfo();
     ChargeInfo getChargeInfo();
@@ -101,7 +101,7 @@ namespace b6 {
 
     void m_getDevInfo();
 
-    ChargingError m_throwError(ERROR err);
+    void m_throwError(ERROR err);
   };
 }
 

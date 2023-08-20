@@ -1,8 +1,11 @@
 import libb6
 
+dev = libb6.Device("1-1.4")
 
-x = libb6.BATTERY_TYPE.LIPO
-print(x);
+info = dev.getSysInfo()
+
+print(info)
+
 #Disambiguate chargers via USB slot
 
 """

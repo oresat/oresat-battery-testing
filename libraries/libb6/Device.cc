@@ -17,68 +17,13 @@
  */
 
 #include "Device.hh"
+#include<string>
+#include<iostream>
+#include<stdint.h>
 
 namespace b6 {
-//****
-/*	Device::Device(const uint8_t * path_array, int path_length) {
-	bool flag = false;//check if we've found the correct charger
-	libusb_device *dev;
-	libusb_device **devs;
-	int i = 0, j = 0;
-	uint8_t path[8]; 
-    int err = libusb_init(&m_libusbCtx);
-    if (err != 0) {
-      throw std::runtime_error("libusb err: " + std::to_string(err));
-    }
-	
-	 err = libusb_get_device_list(NULL, &devs);
-    if (err < 0) {
-      throw std::runtime_error("libusb err: " + std::to_string(err));
-    }
 
-	while ((dev = devs[i++]) != NULL) {
-		struct libusb_device_descriptor desc;
-		err = libusb_get_device_descriptor(dev, &desc);
-		if (err < 0) {
-      	throw std::runtime_error("libusb err: " + std::to_string(err));
-		}
-
-		err = libusb_get_port_numbers(dev, path, path_length);
-		if (err > 0) {
-			flag = true;
-			for (j = 1; j < err; j++) {
-				if (path[j] != path_array[j]) {
-					flag = false;
-					break;	
-				}
-			}
-			if (flag) break;
-		}
-	}
-	if (dev == nullptr) throw std::runtime_error("libusb did not find device");
-    err = libusb_open(dev, & m_dev);//Device_Names.c contents will be in here
-    if (err < 0) {
-      throw std::runtime_error("cannot find/open b6 device");
-    }
-
-    if (libusb_kernel_driver_active(m_dev, 0) == 1) {
-      m_hadKernelDriver = true;
-      err = libusb_detach_kernel_driver(m_dev, 0);
-      if (err != 0) {
-        throw std::runtime_error("cannot detach kernel driver, err: " + std::to_string(err));
-      }
-    }
-    err = libusb_claim_interface(m_dev, 0);
-    if (err != 0) {
-      throw std::runtime_error("cannot claim interface 0, err: " + std::to_string(err));
-    }
-
-    m_getDevInfo();
-  }
-
-*/
-//****
-  Device::Device(/*modify to take a path*/) {
+  Device::Device() {
     int err = libusb_init(&m_libusbCtx);
     if (err != 0) {
       throw std::runtime_error("libusb err: " + std::to_string(err));
@@ -100,6 +45,101 @@ namespace b6 {
 
     */
     if (m_dev == nullptr) {
+      throw std::runtime_error("cannot find/open b6 device");
+    }
+
+    if (libusb_kernel_driver_active(m_dev, 0) == 1) {
+      m_hadKernelDriver = true;
+      err = libusb_detach_kernel_driver(m_dev, 0);
+      if (err != 0) {
+        throw std::runtime_error("cannot detach kernel driver, err: " + std::to_string(err));
+      }
+    }
+    err = libusb_claim_interface(m_dev, 0);
+    if (err != 0) {
+      throw std::runtime_error("cannot claim interface 0, err: " + std::to_string(err));
+    }
+
+    m_getDevInfo();
+  }
+	Device::Device(const std::string & location) {
+	int loc_i {0};//tracker for location index
+	int path_i {0};//tracker for path index
+	bool flag = false;//check if we've found the correct charger
+	libusb_device *dev;
+	libusb_device **devs;
+	int i = 0, j = 0;
+	uint8_t path[8];//the device we're on
+	uint8_t loc_path[8];//the device we want
+
+	//Put string nums into path array.
+
+//Test out my code in another file, to see if it works. Once it works, we're pretty much good to go.
+/*
+	while (location[loc_i]) {
+		if (location[loc_i] != '.' || location[loc_i] != '-') {
+			std::cout << location[loc_i] << " AND " << path[path_i] << std::endl;
+			++loc_i;
+			loc_path[path_i] = std::stoi(location.c_str()[loc_i]);
+			++path_i;
+		}
+		else ++loc_i;
+		}
+*/
+
+    std::string delim = ".";
+    ssize_t k = 0;
+
+    auto start = 0U;
+    auto end = location.find(delim);
+    while (end != std::string::npos) {
+        loc_path[k] = std::stoi(location.substr(start, end - start));
+			//start is index 0, end is last index
+        start = end + delim.length();
+        end = location.find(delim, start);
+        k++;
+    }
+    loc_path[k] = std::stoi(location.substr(start, end));
+
+
+    int err = libusb_init(&m_libusbCtx);
+    if (err != 0) {
+      throw std::runtime_error("libusb err: " + std::to_string(err));
+    }
+	
+	 err = libusb_get_device_list(NULL, &devs);
+    if (err < 0) {
+      throw std::runtime_error("libusb err: " + std::to_string(err));
+    }
+
+	while ((dev = devs[i++]) != NULL) {
+		struct libusb_device_descriptor desc;
+		err = libusb_get_device_descriptor(dev, &desc);
+		if (err < 0) {
+      	throw std::runtime_error("libusb err: " + std::to_string(err));
+		}
+
+		err = libusb_get_port_numbers(dev, path, k);
+		
+		//testing
+		for (int x {0}; x < 8; x++) {
+			std::cout << (unsigned int)loc_path[x] << " " <<  (unsigned int)path[x] << std::endl;
+		}	
+
+		if (err > 0) {
+			flag = true;
+			for (j = 1; j < err; j++) {
+				if (path[j] != loc_path[j]) {
+					flag = false;
+					break;	
+				}
+			}
+			if (flag) break;
+		}
+	}
+	if (dev == nullptr) throw std::runtime_error("libusb did not find device");
+    err = libusb_open(dev, & m_dev);//Device_Names.c contents will be in here
+    if (err < 0) {
       throw std::runtime_error("cannot find/open b6 device");
     }
 
@@ -221,7 +261,7 @@ namespace b6 {
     }
   }
 
-  ChargingError Device::m_throwError(ERROR err) {
+  void Device::m_throwError(ERROR err) {
     switch (err) {
       case ERROR::CONNECTION_BROKEN_1:
       case ERROR::CONNECTION_BROKEN_2:

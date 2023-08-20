@@ -24,58 +24,60 @@ PYBIND11_MODULE(libb6, m) {
 		.value("PB", b6::BATTERY_TYPE::PB)
 		.export_values();
 
-
-
 	py::class_<b6::SysInfo>(m, "SysInfo")
 		.def(py::init<>())
-		.def_readwrite("cycleTime", & b6::SysInfo::cycleTime)
-		.def_readwrite("timeLimit", & b6::SysInfo::timeLimit)
-		.def_readwrite("capLimit", & b6::SysInfo::capLimit)
-		.def_readwrite("lowDCLimit", & b6::SysInfo::lowDCLimit)
-		.def_readwrite("tempLimit", & b6::SysInfo::tempLimit)
-		.def_readwrite("voltage", & b6::SysInfo::voltage)
-		.def_property("cells", [](b6::SysInfo & s) -> py::array
-		{
-			auto dtype = py::dtype(py::format_descriptor<unsigned int>::format());	
-			auto base = py::array(dtype, {8}, sizeof(unsigned int));
-			return py::array(dtype, {8}, {sizeof(unsigned int)}, b6::SysInfo.cells, base);
-		}, [](b6::SysInfo & s) {})
+		.def_readonly("cycleTime", & b6::SysInfo::cycleTime)
+		.def_readonly("timeLimit", & b6::SysInfo::timeLimit)
+		.def_readonly("capLimit", & b6::SysInfo::capLimit)
+		.def_readonly("lowDCLimit", & b6::SysInfo::lowDCLimit)
+		.def_readonly("tempLimit", & b6::SysInfo::tempLimit)
+		.def_readonly("voltage", & b6::SysInfo::voltage)
+		.def_property_readonly("cells", [](b6::SysInfo & s) -> py::list {
+			return py::memoryview::from_buffer(
+						s.cells, { 8 }, { sizeof(unsigned int) * 8 }
+				);
+			})
+		.def_readonly("timeLimitOn", & b6::SysInfo::timeLimitOn)
+		.def_readonly("capLimitOn", & b6::SysInfo::capLimitOn)
+		.def_readonly("keyBuzzer", & b6::SysInfo::keyBuzzer)
+		.def_readonly("systemBuzzer", & b6::SysInfo::systemBuzzer);
 
-		.def_readwrite("timeLimitOn", & b6::SysInfo::timeLimitOn)
-		.def_readwrite("capLimitOn", & b6::SysInfo::capLimitOn)
-		.def_readwrite("keyBuzzer", & b6::SysInfo::keyBuzzer)
-		.def_readwrite("systemBuzzer", & b6::SysInfo::systemBuzzer);
-/*
 	py::class_<b6::ChargeInfo>(m, "ChargeInfo")
 		.def(py::init<>())
-		.def_readwrite("state", & b6::ChargeInfo::state)
-		.def_readwrite("tempExt", & b6::ChargeInfo::tempExt)
-		.def_readwrite("tempInt", & b6::ChargeInfo::tempInt)
-		.def_readwrite("capacity", & b6::ChargeInfo::capacity)
-		.def_readwrite("time", & b6::ChargeInfo::time)
-		.def_readwrite("voltage", & b6::ChargeInfo::voltage)
-		.def_readwrite("current", & b6::ChargeInfo::current)
-		.def_readwrite("impendance", & b6::ChargeInfo::impendance);
-		//.def_readwrite("cells", & b6::ChargeInfo::cells);
+		.def_readonly("state", & b6::ChargeInfo::state)
+		.def_readonly("tempExt", & b6::ChargeInfo::tempExt)
+		.def_readonly("tempInt", & b6::ChargeInfo::tempInt)
+		.def_readonly("capacity", & b6::ChargeInfo::capacity)
+		.def_readonly("time", & b6::ChargeInfo::time)
+		.def_readonly("voltage", & b6::ChargeInfo::voltage)
+		.def_readonly("current", & b6::ChargeInfo::current)
+		.def_readonly("impendance", & b6::ChargeInfo::impendance)
+
+		.def_property_readonly("cells", [](b6::SysInfo & s) -> py::list {
+			return py::memoryview::from_buffer(
+						s.cells, { 8 }, { sizeof(unsigned int) * 8 }
+				);
+			});
 
 	py::class_<b6::ChargeProfile>(m, "ChargeProfile")
 		.def(py::init<>())
-		.def_readwrite("batteryType", & b6::ChargeProfile::batteryType)
-		.def_readwrite("cellCount", & b6::ChargeProfile::cellCount)
-		.def_readwrite("rPeakCount", & b6::ChargeProfile::rPeakCount)
-		.def_readwrite("cycleType", & b6::ChargeProfile::cycleType)
-		.def_readwrite("cycleCount", & b6::ChargeProfile::cycleCount)
-		.def_readwrite("mode", & b6::ChargeProfile::mode)
+		.def_readonly("batteryType", & b6::ChargeProfile::batteryType)
+		.def_readonly("cellCount", & b6::ChargeProfile::cellCount)
+		.def_readonly("rPeakCount", & b6::ChargeProfile::rPeakCount)
+		.def_readonly("cycleType", & b6::ChargeProfile::cycleType)
+		.def_readonly("cycleCount", & b6::ChargeProfile::cycleCount)
+		.def_readonly("mode", & b6::ChargeProfile::mode)
 
-		.def_readwrite("chargeCurrent", & b6::ChargeProfile::chargeCurrent)
-		.def_readwrite("dischargeCurrent", & b6::ChargeProfile::dischargeCurrent)
-		.def_readwrite("cellDischargeVoltage", & b6::ChargeProfile::cellDischargeVoltage)
-		.def_readwrite("endVoltage", & b6::ChargeProfile::trickleCurrent);
+		.def_readonly("chargeCurrent", & b6::ChargeProfile::chargeCurrent)
+		.def_readonly("dischargeCurrent", & b6::ChargeProfile::dischargeCurrent)
+		.def_readonly("cellDischargeVoltage", & b6::ChargeProfile::cellDischargeVoltage)
+		.def_readonly("endVoltage", & b6::ChargeProfile::trickleCurrent);
 
 	//Binds Device functions
 	py::class_<b6::Device>(m, "Device")
 		//.def(name of function), & makes pointer to function, py::arg sets argument names
 		.def(py::init<>())
+		.def(py::init<const std::string &>())
 		//.def(py::init<const std::string &>())
 		
 		.def("getSysInfo", & b6::Device::getSysInfo)
@@ -89,7 +91,9 @@ PYBIND11_MODULE(libb6, m) {
 		.def("getSWVersion", & b6::Device::getSWVersion)
 		.def("isEncrypted", & b6::Device::isEncrypted)
 		.def("getCellCount", & b6::Device::getCellCount)
-		.def("getDefaultChargeProfile", & b6::Device::getDefaultChargeProfile, py::arg("type"))
+		.def("getDefaultChargeProfile", [](b6::Device & d, b6::BATTERY_TYPE t) {
+			return d.getDefaultChargeProfile(t);
+				})
 
 		.def("setCycleTime", & b6::Device::setCycleTime, py::arg("cycleTime"))
 		.def("setTimeLimit", & b6::Device::setTimeLimit, py::arg("enabled"), py::arg("limit"))
@@ -100,8 +104,13 @@ PYBIND11_MODULE(libb6, m) {
 		.def("stopCharging", & b6::Device::stopCharging)
 		.def("startCharging", & b6::Device::startCharging, py::arg("profile"))
 
-		.def("isBatteryLi", & b6::Device::isBatteryLi, py::arg("type"))
-		.def("isBatteryNi", & b6::Device::isBatteryNi, py::arg("type"));
+		.def("isBatteryLi", [](b6::Device & d, b6::BATTERY_TYPE t) {
+			return d.isBatteryLi(t);
+				})
+
+		.def("isBatteryNi", [](b6::Device & d, b6::BATTERY_TYPE t) {
+			return d.isBatteryNi(t);
+				});
 
 	//Binding from Error.hh
 	py::register_exception<b6::ErrorConnectionBroken>(m, "ErrorConnectionBroken");
@@ -125,7 +134,6 @@ PYBIND11_MODULE(libb6, m) {
 	py::register_exception<b6::ErrorInputFail>(m, "ErrorInputDown");
 	py::register_exception<b6::ErrorUnknown>(m, "ErrorUnknown");
 
-	*/
 }
 
 
@@ -136,14 +144,3 @@ PYBIND11_MODULE(libb6, m) {
 	return 1.5
  */
 
-/*
-  enum class BATTERY_TYPE : uint8_t {
-    LIPO                    = 0x00,
-    LIIO                    = 0x01,
-    LIFE                    = 0x02,
-    LIHV                    = 0x03,
-    NIMH                    = 0x04,
-    NICD                    = 0x05,
-    PB                      = 0x06,
-  };
-*/

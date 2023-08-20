@@ -14,6 +14,8 @@
  * Compile with: "cc confusion.c `pkg-config --libs --cflags libusb-1.0`"
  */
 
+#include<iostream>
+
 #include<stdio.h>
 
 #include<libusb.h>
