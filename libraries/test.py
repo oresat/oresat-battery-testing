@@ -1,6 +1,6 @@
 import libb6
 
-dev = libb6.Device("1-1.4")
+dev = libb6.Device("1.3")
 
 info = dev.getSysInfo()
 

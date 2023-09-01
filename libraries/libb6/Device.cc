@@ -20,6 +20,7 @@
 #include<string>
 #include<iostream>
 #include<stdint.h>
+#include<stdlib.h> //adds atoi
 
 namespace b6 {
 
@@ -75,18 +76,21 @@ namespace b6 {
 	//Put string nums into path array.
 
 //Test out my code in another file, to see if it works. Once it works, we're pretty much good to go.
-/*
 	while (location[loc_i]) {
 		if (location[loc_i] != '.' || location[loc_i] != '-') {
-			std::cout << location[loc_i] << " AND " << path[path_i] << std::endl;
+			//std::cout << location[loc_i] << " AND " << path[path_i] << std::endl;
+			std::cout << std::endl << location[loc_i] << "*****" << std::endl;
+			char to_convert = location[loc_i];	
+			loc_path[path_i] = std::stoi(to_convert);
+			//NEED TO FIX THIS - cannot currently convert w/ stoi due to necessity of converting
+											//a single character
+//(location.c_str()[loc_i]);
 			++loc_i;
-			loc_path[path_i] = std::stoi(location.c_str()[loc_i]);
 			++path_i;
 		}
 		else ++loc_i;
 		}
-*/
-
+/*
     std::string delim = ".";
     ssize_t k = 0;
 
@@ -100,7 +104,7 @@ namespace b6 {
         k++;
     }
     loc_path[k] = std::stoi(location.substr(start, end));
-
+*/
 
     int err = libusb_init(&m_libusbCtx);
     if (err != 0) {
@@ -119,12 +123,13 @@ namespace b6 {
       	throw std::runtime_error("libusb err: " + std::to_string(err));
 		}
 
-		err = libusb_get_port_numbers(dev, path, k);
+		err = libusb_get_port_numbers(dev, path, path_i /* Ryan's version path_i is k */);
 		
-		//testing
+		/*
 		for (int x {0}; x < 8; x++) {
 			std::cout << (unsigned int)loc_path[x] << " " <<  (unsigned int)path[x] << std::endl;
 		}	
+		*/
 
 		if (err > 0) {
 			flag = true;
