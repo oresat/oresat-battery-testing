@@ -77,14 +77,10 @@ namespace b6 {
 
 //Test out my code in another file, to see if it works. Once it works, we're pretty much good to go.
 	while (location[loc_i]) {
-		if (location[loc_i] != '.' || location[loc_i] != '-') {
-			//std::cout << location[loc_i] << " AND " << path[path_i] << std::endl;
-			std::cout << std::endl << location[loc_i] << "*****" << std::endl;
-			char to_convert = location[loc_i];	
-			loc_path[path_i] = std::stoi(to_convert);
-			//NEED TO FIX THIS - cannot currently convert w/ stoi due to necessity of converting
-											//a single character
-//(location.c_str()[loc_i]);
+		if (location[loc_i] != '.' && location[loc_i] != '-') {
+			int to_add = location[loc_i] - '0';
+			loc_path[path_i] = to_add;
+			std::cout << std::endl << to_add << std::endl;
 			++loc_i;
 			++path_i;
 		}
