@@ -139,6 +139,7 @@ PYBIND11_MODULE(libb6, m) {
 
 
 /*
+Neat Python Tip:
  *def example(abc: str) -> float: #specifies return type float, abc is a string, print out that arg type is string
  	print(abc)
 	return 1.5
