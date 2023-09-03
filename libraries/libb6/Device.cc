@@ -63,6 +63,7 @@ namespace b6 {
 
     m_getDevInfo();
   }
+//Custom constructor that takes in a port number and then checks each device plugged in via USB until it finds the one that matches said argument port number. Then it opens that one.
 	Device::Device(const std::string & location) {
 	int loc_i {0};//tracker for location index
 	int path_i {0};//tracker for path index
@@ -80,7 +81,7 @@ namespace b6 {
 		if (location[loc_i] != '.' && location[loc_i] != '-') {
 			int to_add = location[loc_i] - '0';
 			loc_path[path_i] = to_add;
-			std::cout << std::endl << to_add << std::endl;
+			std::cout << std::endl << "Port number digit: \n" << to_add << std::endl;//test
 			++loc_i;
 			++path_i;
 		}
@@ -138,6 +139,7 @@ namespace b6 {
 			if (flag) break;
 		}
 	}
+
 	if (dev == nullptr) throw std::runtime_error("libusb did not find device");
     err = libusb_open(dev, & m_dev);//Device_Names.c contents will be in here
     if (err < 0) {
