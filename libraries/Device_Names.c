@@ -1,4 +1,6 @@
 /*
+ * OUTDATED FILE (was used for testing)
+ *
  * The purpose of this document is to get the device list (of chargers),
  * with the ultimate intention of being able to pass in the device path
  * into the libusb_open function (in Device.cc?). This will let the udev
