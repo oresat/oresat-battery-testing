@@ -76,9 +76,13 @@ namespace b6 {
 
 	//Put string nums into path array.
 
-//Test out my code in another file, to see if it works. Once it works, we're pretty much good to go.
+/*
+	if (location[1] == '-') bus_num = location[0];//for 1 digit bus numbers
+	else bus_num = (10 * (location[0] - '0')) + (location[1] - '0');
+	//if bus number is more than two digits, program won't wor
+*/
 	while (location[loc_i]) {
-		if (location[loc_i] != '.' && location[loc_i] != '-') {
+		if (location[loc_i] != '.' && location[loc_i] != '-')
 			int to_add = location[loc_i] - '0';
 			loc_path[path_i] = to_add;
 			std::cout << std::endl << "Port number digit: \n" << to_add << std::endl;//test
@@ -87,21 +91,6 @@ namespace b6 {
 		}
 		else ++loc_i;
 		}
-/*
-    std::string delim = ".";
-    ssize_t k = 0;
-
-    auto start = 0U;
-    auto end = location.find(delim);
-    while (end != std::string::npos) {
-        loc_path[k] = std::stoi(location.substr(start, end - start));
-			//start is index 0, end is last index
-        start = end + delim.length();
-        end = location.find(delim, start);
-        k++;
-    }
-    loc_path[k] = std::stoi(location.substr(start, end));
-*/
 
     int err = libusb_init(&m_libusbCtx);
     if (err != 0) {
@@ -130,7 +119,15 @@ namespace b6 {
 
 		if (err > 0) {
 			flag = true;
+			//arg for libusb_get_bus_number ???
 			for (j = 1; j < err; j++) {
+				//check if bus number is correct
+				//****NEW CODE RIGHT HERE NEXT THREE LINES****
+				if libusb_get_bus_number(path) != loc_path[0] {
+					flag = false;
+					break;
+				}
+
 				if (path[j] != loc_path[j]) {
 					flag = false;
 					break;	
