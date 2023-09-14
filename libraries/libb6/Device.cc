@@ -82,7 +82,7 @@ namespace b6 {
 	//if bus number is more than two digits, program won't wor
 */
 	while (location[loc_i]) {
-		if (location[loc_i] != '.' && location[loc_i] != '-')
+		if (location[loc_i] != '.' && location[loc_i] != '-') {
 			int to_add = location[loc_i] - '0';
 			loc_path[path_i] = to_add;
 			std::cout << std::endl << "Port number digit: \n" << to_add << std::endl;//test
@@ -109,7 +109,7 @@ namespace b6 {
       	throw std::runtime_error("libusb err: " + std::to_string(err));
 		}
 
-		err = libusb_get_port_numbers(dev, path, path_i /* Ryan's version path_i is k */);
+		err = libusb_get_port_numbers(dev, path, path_i/* Ryan's version path_i is k */);
 		
 		/*
 		for (int x {0}; x < 8; x++) {
@@ -117,17 +117,13 @@ namespace b6 {
 		}	
 		*/
 
-		if (err > 0) {
+		//HELP HELP HELP!
+		//if (libusb_get_bus_number(path) != loc_path[0]) flag = false;
+
+		if (flag != false && err > 0) {
 			flag = true;
 			//arg for libusb_get_bus_number ???
 			for (j = 1; j < err; j++) {
-				//check if bus number is correct
-				//****NEW CODE RIGHT HERE NEXT THREE LINES****
-				if libusb_get_bus_number(path) != loc_path[0] {
-					flag = false;
-					break;
-				}
-
 				if (path[j] != loc_path[j]) {
 					flag = false;
 					break;	
@@ -135,7 +131,7 @@ namespace b6 {
 			}
 			if (flag) break;
 		}
-	}
+	
 
 	if (dev == nullptr) throw std::runtime_error("libusb did not find device");
     err = libusb_open(dev, & m_dev);//Device_Names.c contents will be in here
@@ -156,7 +152,8 @@ namespace b6 {
     }
 
     m_getDevInfo();
-  }
+	} 
+	}
 
   Device::~Device() {
     if (m_dev != nullptr) {
@@ -447,4 +444,5 @@ namespace b6 {
 
     return profile;
   }
+
 }
