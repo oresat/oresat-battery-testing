@@ -67,7 +67,7 @@ namespace b6 {
 	Device::Device(const std::string & location) {
 	int loc_i {0};//tracker for location index
 	int path_i {0};//tracker for path index
-	bool flag = false;//check if we've found the correct charger
+	bool flag = true;//check if we've found the correct charger
 	libusb_device *dev;
 	libusb_device **devs;
 	int i = 0, j = 0;
@@ -111,16 +111,10 @@ namespace b6 {
 
 		err = libusb_get_port_numbers(dev, path, path_i/* Ryan's version path_i is k */);
 		
-		/*
-		for (int x {0}; x < 8; x++) {
-			std::cout << (unsigned int)loc_path[x] << " " <<  (unsigned int)path[x] << std::endl;
-		}	
-		*/
+		if (libusb_get_bus_number(path) != loc_path[0]) flag = false;//go to next device
+																						 //bus num does not match
 
-		//HELP HELP HELP!
-		//if (libusb_get_bus_number(path) != loc_path[0]) flag = false;
-
-		if (flag != false && err > 0) {
+		if (flag && err > 0) {
 			flag = true;
 			//arg for libusb_get_bus_number ???
 			for (j = 1; j < err; j++) {
