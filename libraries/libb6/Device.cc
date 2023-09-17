@@ -159,7 +159,7 @@ namespace b6 {
       throw std::runtime_error("cannot claim interface 0, err: " + std::to_string(err));
     }
 
-    //m_getDevInfo();
+    m_getDevInfo();
 	} 
 
   Device::~Device() {
