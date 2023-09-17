@@ -67,7 +67,7 @@ namespace b6 {
 	Device::Device(const std::string & location) {
 	int loc_i {0};//tracker for location index
 	int path_i {0};//tracker for path index
-	bool flag = true;//check if we've found the correct charger
+	bool found = false;//check if we've found the correct charger
 	libusb_device *dev;
 	libusb_device **devs;
 	int i = 0, j = 0;
@@ -101,7 +101,8 @@ namespace b6 {
     if (err < 0) {
       throw std::runtime_error("libusb err: " + std::to_string(err));
     }
-
+	
+	
 	while ((dev = devs[i++]) != NULL) {
 		struct libusb_device_descriptor desc;
 		err = libusb_get_device_descriptor(dev, &desc);
@@ -110,23 +111,27 @@ namespace b6 {
 		}
 
 		err = libusb_get_port_numbers(dev, path, path_i/* Ryan's version path_i is k */);
-		
-		if (libusb_get_bus_number(path) != loc_path[0]) flag = false;//go to next device
-																						 //bus num does not match
+		if (err < 0) continue;
+		uint8_t bus_num = libusb_get_bus_number(dev);	
 
-		if (flag && err > 0) {
-			flag = true;
+		if (bus_num != loc_path[0] || bus_num == 0) continue;//go to next device
+																			  //bus num does not match
+
 			//arg for libusb_get_bus_number ???
 			for (j = 1; j < err; j++) {
 				if (path[j] != loc_path[j]) {
-					flag = false;
+					found = false;
 					break;	
 				}
+				found = true;
 			}
-			if (flag) break;
-		}
-	
+		if (found) break;
+	}
 
+	if (!found) {
+		throw std::runtime_error("DID NOT FIND USB DEVICE AT ALL!");
+	}
+	
 	if (dev == nullptr) throw std::runtime_error("libusb did not find device");
     err = libusb_open(dev, & m_dev);//Device_Names.c contents will be in here
     if (err < 0) {
