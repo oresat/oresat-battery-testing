@@ -172,7 +172,8 @@ namespace b6 {
       }
       libusb_close(m_dev);
     }
-    libusb_exit(m_libusbCtx);
+    //libusb_exit(m_libusbCtx); //Without this line, the program works but with memory leaks.
+										  //With this line, the program seg faults.
   }
 
   SysInfo Device::getSysInfo() {
