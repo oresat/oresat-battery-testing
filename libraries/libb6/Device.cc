@@ -66,8 +66,8 @@ namespace b6 {
 	Device::Device(const std::string & location) {
 	int loc_i {0};//tracker for location index
 	int path_i {0};//tracker for path index
-	bool found = false;//check if we've found the correct charger
-	libusb_device *dev;
+	libusb_device * b6dev = nullptr;//check if we've b6dev the correct charger
+	libusb_device * dev;
 	libusb_device **devs;
 	int i = 0, j = 0;
 	uint8_t path[8];//the device we're on
@@ -95,7 +95,7 @@ namespace b6 {
       throw std::runtime_error("libusb err: " + std::to_string(err));
     }
 	
-	 err = libusb_get_device_list(NULL, &devs);
+	 err = libusb_get_device_list(NULL, &devs);//list is OPEN
     if (err < 0) {
       throw std::runtime_error("libusb err: " + std::to_string(err));
     }
@@ -118,17 +118,28 @@ namespace b6 {
 			//arg for libusb_get_bus_number ???
 			for (j = 1; j < err; j++) {
 				if (path[j] != loc_path[j]) {
-					found = false;
+					b6dev = nullptr;
 					break;	
 				}
-				found = true;
+				b6dev = dev;
 			}
-		if (found) break;
+		if (b6dev != nullptr) break;
 	}
 
-	if (!found) {
+//free_device_list expects all unwanted devices to be unreferenced
+	while ((dev = devs[i++]) != NULL) {
+		if (b6dev != dev) {
+			libusb_unref_device(dev);
+		}
+	}
+
+	libusb_free_device_list(devs, 0);
+
+	if (b6dev == nullptr) {
 		throw std::runtime_error("DID NOT FIND USB DEVICE AT ALL!");
 	}
+
+	dev = b6dev;//dev is device last accessed, but b6dev is the correct device
 	
 	if (dev == nullptr) throw std::runtime_error("libusb did not find device");
     err = libusb_open(dev, & m_dev);//Device_Names.c contents will be in here
@@ -148,10 +159,12 @@ namespace b6 {
       throw std::runtime_error("cannot claim interface 0, err: " + std::to_string(err));
     }
 
-    m_getDevInfo();
+    //m_getDevInfo();
 	} 
 
   Device::~Device() {
+	std::cout << "DECONSTRUCTOR DECONSTRUCT!!!" << std::endl;
+	std::cout << m_libusbCtx << std::endl;
     if (m_dev != nullptr) {
       libusb_release_interface(m_dev, 0);
       if (m_hadKernelDriver) {

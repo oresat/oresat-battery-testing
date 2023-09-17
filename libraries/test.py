@@ -4,9 +4,9 @@ import libb6
 print("A")
 #devB = libb6.Device("1-1.3")
 print("B")
-#devC = libb6.Device("1-4")
+devC = libb6.Device("1-4")
 print("C")
-#devD = libb6.Device("1-1.4")#this keeps seg-faulting meaning that there is
+devD = libb6.Device("1-1.4")#this keeps seg-faulting meaning that there is
 print("D")
 
 #info = dev.getSysInfo()
