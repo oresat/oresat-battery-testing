@@ -1,13 +1,17 @@
 import libb6
 
-dev = libb6.Device("1-1.1")#this keeps seg-faulting meaning that there is
-								 #probably an error in the logic in Device.cc (comparing port numbers)
-								 #such that even if we have the correct port number
-								 #the computer thinks we don't and thus does not open a device
+#devA = libb6.Device("1-2")
+print("A")
+#devB = libb6.Device("1-1.3")
+print("B")
+#devC = libb6.Device("1-4")
+print("C")
+#devD = libb6.Device("1-1.4")#this keeps seg-faulting meaning that there is
+print("D")
 
-info = dev.getSysInfo()
+#info = dev.getSysInfo()
 
-print(info)
+#print(info)
 
 #Disambiguate chargers via USB slot
 

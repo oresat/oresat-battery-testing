@@ -20,7 +20,6 @@
 #include<string>
 #include<iostream>
 #include<stdint.h>
-#include<stdlib.h> //adds atoi
 
 namespace b6 {
 
@@ -85,7 +84,6 @@ namespace b6 {
 		if (location[loc_i] != '.' && location[loc_i] != '-') {
 			int to_add = location[loc_i] - '0';
 			loc_path[path_i] = to_add;
-			std::cout << std::endl << "Port number digit: \n" << to_add << std::endl;//test
 			++loc_i;
 			++path_i;
 		}
@@ -152,7 +150,6 @@ namespace b6 {
 
     m_getDevInfo();
 	} 
-	}
 
   Device::~Device() {
     if (m_dev != nullptr) {
