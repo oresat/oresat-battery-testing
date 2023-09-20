@@ -10,7 +10,7 @@ V1.0 of the PCB layout:
 ### Setup
 
 - Install dependencies: `$ sudo apt install libusb-1.0-0-dev pkg-config python3-dev`
-- Initialize libb6 submodule: `$ git submodule update --init`
+- Initialize libb6 submodule: `$ git submodule update --init` (don't think this is still true)
 - Build Python extension for libb6: `$ make -C libraries`
 
 ### Udev Setup
@@ -22,4 +22,4 @@ This will allow you to run test.py without requiring sudo.
 
 ### Run
 
-"python test.py"
+"python engage.py"

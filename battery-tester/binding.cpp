@@ -2,10 +2,10 @@
 #include<pybind11/pytypes.h>
 #include<pybind11/numpy.h>
 #include<string>
-#include<libb6/Device.hh>
-#include<libb6/Enum.hh>
-#include<libb6/Error.hh>
-#include<libb6/Packet.hh>
+#include<Device.hh>
+#include<Enum.hh>
+#include<Error.hh>
+#include<Packet.hh>
 
 namespace py = pybind11;
 

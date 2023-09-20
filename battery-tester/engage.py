@@ -1,5 +1,7 @@
 import libb6
 
+#run with "python engage.py"
+
 #devA = libb6.Device("1-2")
 print("A")
 #devB = libb6.Device("1-1.3")
