@@ -1,6 +1,8 @@
-from operator import truediv
-import liblabjack
 import time
+from operator import truediv
+
+import liblabjack
+
 
 class BattLabJack(liblabjack.LabJack):
     def __init__(self, senseControlPins, chargeControlPins, relayWait=0.1):
@@ -28,6 +30,7 @@ class BattLabJack(liblabjack.LabJack):
     def waitForRelays(self):
         time.sleep(self.relayWait)
 
+
 class BatteryBank:
     def __init__(self, battlabjack: BattLabJack, bankID: int, cellCount=4):
         self.lj = battlabjack
@@ -53,7 +56,7 @@ class BatteryBank:
             at = 0
             for avi in range(avgCount):
                 time.sleep(delay)
-                av += self.lj.analogRead(cellNum*2, settling=1, diff=True)
+                av += self.lj.analogRead(cellNum * 2, settling=1, diff=True)
                 atv = self.lj.analogRead(cellNum + 8)
                 at += atv
             self.cellVolts[cellNum] = av / avgCount

@@ -1,6 +1,6 @@
 
 PYLIB_SRC = .
-LIBB6_SRC = libb6
+LIBB6_SRC = .
 
 LINK_TARGET = libb6.so
 

@@ -1,9 +1,11 @@
 import u6
 
+
 class LabJack:
     def __init__(self):
         self.d = u6.U6()
-#anything self.d is a labjack function
+
+    # anything self.d is a labjack function
     def analogRead(self, pin, resolution=1, gain=0, settling=0, diff=False):
         if not (0 <= pin <= 11):
             raise ValueError("Invalid Pin number!")
@@ -24,7 +26,7 @@ class LabJack:
             return self.d.getFeedback(u6.BitDirRead())
         else:
             raise ValueError("Invalid dir!")
-        
+
     def digitalWrite(self, pin, state):
         if not (0 <= pin <= 19):
             raise ValueError("Invalid Pin number!")

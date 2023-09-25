@@ -1,12 +1,4 @@
-C/C++ files require:
-string
-vector
-libusb.h
-stdexcept
-cstdint
-exception
-
-Python files require:
-libb6
-u6
-time
+pybind11
+black
+isort
+pylama

@@ -1,21 +1,21 @@
 import libb6
 
-#run with "python engage.py"
+# run with "python engage.py"
 
-#devA = libb6.Device("1-2")
+# devA = libb6.Device("1-2")
 print("A")
-#devB = libb6.Device("1-1.3")
+# devB = libb6.Device("1-1.3")
 print("B")
 devC = libb6.Device("1-4")
 print("C")
-devD = libb6.Device("1-1.4")#this keeps seg-faulting meaning that there is
+devD = libb6.Device("1-1.4")  # this keeps seg-faulting meaning that there is
 print("D")
 
-#info = dev.getSysInfo()
+# info = dev.getSysInfo()
 
-#print(info)
+# print(info)
 
-#Disambiguate chargers via USB slot
+# Disambiguate chargers via USB slot
 
 """
 c = b6mini.Charger([1,2]) #pass in array of port numbers
