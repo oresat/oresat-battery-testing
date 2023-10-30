@@ -163,8 +163,8 @@ namespace b6 {
 	} 
 
   Device::~Device() {
-	std::cout << "DECONSTRUCTOR DECONSTRUCT!!!" << std::endl;
-	std::cout << m_libusbCtx << std::endl;
+	//std::cout << "DECONSTRUCTOR DECONSTRUCT!!!" << std::endl;
+	//std::cout << m_libusbCtx << std::endl;
     if (m_dev != nullptr) {
       libusb_release_interface(m_dev, 0);
       if (m_hadKernelDriver) {
