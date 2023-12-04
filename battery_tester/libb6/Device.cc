@@ -21,29 +21,16 @@
 #include<iostream>
 #include<stdint.h>
 
-namespace b6 {
 
+namespace b6 {
+	/*Note that our custom constructor is below the first one.*/
   Device::Device() {
     int err = libusb_init(&m_libusbCtx);
     if (err != 0) {
       throw std::runtime_error("libusb err: " + std::to_string(err));
     }
     m_dev = libusb_open_device_with_vid_pid(m_libusbCtx, B6_VENDOR_ID, B6_PRODUCT_ID);
-	 //use libusb_open not the above function - look at libusb documentation to figure out how to use libusb_open
-    //will be tricky (need to be able to pass in variable to specify which device will be opened)
-    //can use id path instead of serial number (would be based on usb port on my computer) - this will not be universal to everyone though
-    /*
-    Discover devices using libusb_get_device_list().
 
-    Choose the device that you want to operate, and call libusb_open().
-
-    Unref all devices in the discovered device list.
-
-    Free the discovered device list.
-
-    will also need to modify the files in oresat-bat-test libraries (for talking between C and python)
-
-    */
     if (m_dev == nullptr) {
       throw std::runtime_error("cannot find/open b6 device");
     }
@@ -163,8 +150,8 @@ namespace b6 {
 	} 
 
   Device::~Device() {
-	//std::cout << "DECONSTRUCTOR DECONSTRUCT!!!" << std::endl;
-	//std::cout << m_libusbCtx << std::endl;
+	/*std::cout << "DECONSTRUCTOR DECONSTRUCT!!!" << std::endl;*/
+	/*std::cout << m_libusbCtx << std::endl;*/
     if (m_dev != nullptr) {
       libusb_release_interface(m_dev, 0);
       if (m_hadKernelDriver) {
