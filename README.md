@@ -14,12 +14,12 @@ V1.0 of the PCB layout:
 - Build Python extension for libb6: `$ make -C libraries`
 
 ### Udev Setup
-Copy the .rules file (from the Documentation folder) into the folder on your computer which contains rules files for udev.
+Copy the .rules files (from the Battery Tester folder) into the folder on your computer which contains rules files for udev.
 
 For me it is: /etc/udev/rules.d
 
 This will allow you to run test.py without requiring sudo.
 
 ### Run
-
-"python engage.py"
+from oresat-battery-testing
+"python -m battery_tester"
