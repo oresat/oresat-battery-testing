@@ -1,10 +1,10 @@
 import time
 from operator import truediv
 
-import .liblabjack
+from .liblabjack import LabJack
 
-
-class BattLabJack(liblabjack.LabJack):
+#changed liblabjack.Labjack to just LabJack in line below
+class BattLabJack(LabJack):
     def __init__(self, senseControlPins, chargeControlPins, relayWait=0.1):
         super().__init__()
         self.senseControlPins = senseControlPins

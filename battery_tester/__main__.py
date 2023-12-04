@@ -2,7 +2,7 @@ from argparse import ArgumentParser
 from .libb6 import libb6
 import time
 import csv
-import .battbank
+from .battbank import BattLabJack, BatteryBank
 
 #Chargers are labelled on board; strings are usb serial numbers.
 #For use with Lev's laptop, bottom right USB port only.
