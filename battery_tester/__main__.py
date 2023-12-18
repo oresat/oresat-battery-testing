@@ -53,16 +53,21 @@ def charger_main():
 
 ###############################################################
 
-###############################################################
-#Function devoted to labjack tasks.
-def labjack_main():
 
+def measure_volts_temp(battery_pack_num):
 	sense_control_pins = (0, 2, 4, 6)
 	charge_control_pins = (7, 5, 3, 1)
 
-	
 	blj = BattLabJack(sense_control_pins, charge_control_pins)
+	
+	bb = BatteryBank(blj, battery_pack_num) #should be 0,1,2, or 3
 
+	bb.measure()
+	print(bb.cellVolts)
+	print(bb.cellTemps)
+	
+
+def labjack_main():
 	sense_control_pins = (0, 2, 4, 6)
 	charge_control_pins = (7, 5, 3, 1)
 
