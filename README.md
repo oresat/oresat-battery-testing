@@ -21,5 +21,8 @@ For me it is: /etc/udev/rules.d
 This will allow you to run test.py without requiring sudo.
 
 ### Run
-from oresat-battery-testing
+from oresat-battery-testing:
 "python -m battery_tester"
+
+If you get an import error about libb6:
+...run the Makefile in battery_tester/libb6 to make an object file.
