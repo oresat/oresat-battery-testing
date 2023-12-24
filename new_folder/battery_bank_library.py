@@ -1,7 +1,7 @@
 import time
 from operator import truediv
 
-from labjack-library import LabJack
+from labjack_library import LabJack
 
 #changed liblabjack.Labjack to just LabJack in line below
 class BattLabJack(LabJack):
