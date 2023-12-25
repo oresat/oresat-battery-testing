@@ -20,11 +20,10 @@ class Charger:
 	"""
 	Holds serial numbers hardcoded.	
 	"""
-	A = "1.2"
-	#A = "1-2.1.4"
+	A = "2.1.4"
 	B = "1.2"
-	C = "1-4"
-	D = "1-1.4"
+	C = "2.3"
+	D = "1-2.4"
 		
 def access(charger_id):
 	"""
@@ -63,7 +62,13 @@ not sure if it wants the whole class or simply something in the class, or the li
 Qs: 
 Is getDefaultChargeProfile the correct function to get the chargeProfile argument for the startCharging function?
 
-If so, what/where do I get the BATTERY_TYPE argument from?
+Probably but you should let user change profile settings, and for now you can save it in chargeProfile
+liio is correct battery type
+
+Udev rules are updated, and charger B works, but A does not, nor does C 
+B is the only one that works, but if everything except for B is unplugged and I run with Charger.D then B works, and it also works with Charger.B
+
+This thing works with Charger B, so I'm just gonna use that one charger for now.
 """
 
 
