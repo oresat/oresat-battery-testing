@@ -10,12 +10,19 @@ import labjack_library
 #D is 1-1.4                                                          
 ######################################################################
 
+class Battery:
+	"""
+	Holds chargeProfile of battery hardcoded, for now.
+	"""
+	
+
 class Charger:
 	"""
 	Holds serial numbers hardcoded.	
 	"""
 	A = "1.2"
-	B = "1-1.3"
+	#A = "1-2.1.4"
+	B = "1.2"
 	C = "1-4"
 	D = "1-1.4"
 		
@@ -28,16 +35,16 @@ def access(charger_id):
 	return dev
 
 
-catch_dev = access(Charger.A)
+catch_dev = access(Charger.B)
 
+chargeProfile = libb6.Device.getDefaultChargeProfile(catch_dev, libb6.BATTERY_TYPE.LIIO)
+print(chargeProfile.batteryType, chargeProfile.cellCount)
+catch_dev.startCharging(chargeProfile)
 
-chargeProfile = libb6.Device.getDefaultChargeProfile(catch_dev, libb6.BATTERY_TYPE)
-#libb6.Device.startCharging(access(Charger.A), """charge profile""")
-
+"""
 #.def("startCharging", & b6::Device::startCharging, py::arg("profile"))
 #  1. (self: libb6.libb6.Device, profile: libb6.libb6.ChargeProfile) -> bool
 
-"""
 .def("getDefaultChargeProfile", [](b6::Device & d, b6::BATTERY_TYPE t) {
 	return d.getDefaultChargeProfile(t);
 		})
@@ -58,5 +65,7 @@ Is getDefaultChargeProfile the correct function to get the chargeProfile argumen
 
 If so, what/where do I get the BATTERY_TYPE argument from?
 """
+
+
 
 

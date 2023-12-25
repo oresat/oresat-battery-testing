@@ -61,17 +61,17 @@ PYBIND11_MODULE(libb6, m) {
 
 	py::class_<b6::ChargeProfile>(m, "ChargeProfile")
 		.def(py::init<>())
-		.def_readonly("batteryType", & b6::ChargeProfile::batteryType)
-		.def_readonly("cellCount", & b6::ChargeProfile::cellCount)
-		.def_readonly("rPeakCount", & b6::ChargeProfile::rPeakCount)
-		.def_readonly("cycleType", & b6::ChargeProfile::cycleType)
-		.def_readonly("cycleCount", & b6::ChargeProfile::cycleCount)
-		.def_readonly("mode", & b6::ChargeProfile::mode)
+		.def_readwrite("batteryType", & b6::ChargeProfile::batteryType)
+		.def_readwrite("cellCount", & b6::ChargeProfile::cellCount)
+		.def_readwrite("rPeakCount", & b6::ChargeProfile::rPeakCount)
+		.def_readwrite("cycleType", & b6::ChargeProfile::cycleType)
+		.def_readwrite("cycleCount", & b6::ChargeProfile::cycleCount)
+		.def_readwrite("mode", & b6::ChargeProfile::mode)
 
-		.def_readonly("chargeCurrent", & b6::ChargeProfile::chargeCurrent)
-		.def_readonly("dischargeCurrent", & b6::ChargeProfile::dischargeCurrent)
-		.def_readonly("cellDischargeVoltage", & b6::ChargeProfile::cellDischargeVoltage)
-		.def_readonly("endVoltage", & b6::ChargeProfile::trickleCurrent);
+		.def_readwrite("chargeCurrent", & b6::ChargeProfile::chargeCurrent)
+		.def_readwrite("dischargeCurrent", & b6::ChargeProfile::dischargeCurrent)
+		.def_readwrite("cellDischargeVoltage", & b6::ChargeProfile::cellDischargeVoltage)
+		.def_readwrite("endVoltage", & b6::ChargeProfile::trickleCurrent);
 
 	//Binds Device functions
 	py::class_<b6::Device>(m, "Device")
