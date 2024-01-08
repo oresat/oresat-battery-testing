@@ -3,6 +3,15 @@ import battery_bank_library
 from battery_bank_library import BattLabJack
 from battery_bank_library import BatteryBank
 import labjack_library
+import time
+
+#############################################
+#Current Questions:
+#Is the voltage and temperature data accurate (it does change depending on whether batteries
+#are in bank versus not, but it has negative numbers which is weird).
+#Why does my one functioning charger (B) throw a connection error on the hardware (but not
+#the software side of things)? Says to check main cable - suspect problem with wires.
+#############################################
 
 #Code pertains to the chargers below this line.
 class Battery:
@@ -38,6 +47,9 @@ def activate_charger():
 	chargeProfile = libb6.Device.getDefaultChargeProfile(catch_dev, libb6.BATTERY_TYPE.LIIO)
 	print(chargeProfile.batteryType, chargeProfile.cellCount)
 	catch_dev.startCharging(chargeProfile)
+
+activate_charger()
+time.sleep(5)
 
 #Code pertains to the Labjack below this line.
 class LCPs:
