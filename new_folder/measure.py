@@ -1,24 +1,18 @@
 from libb6 import libb6
 import battery_bank_library
+from battery_bank_library import BattLabJack
+from battery_bank_library import BatteryBank
 import labjack_library
 
-######################################################################
-#Serial numbers for each battery charger (titled on board A, B, C, D):  
-#A is 1.2                                                            
-#B is 1-1.3                                                          
-#C is 1-4                                                            
-#D is 1-1.4                                                          
-######################################################################
-
+#Code pertains to the chargers below this line.
 class Battery:
 	"""
 	Holds chargeProfile of battery hardcoded, for now.
 	"""
-	
 
 class Charger:
 	"""
-	Holds serial numbers hardcoded.	
+	Holds serial numbers of each charger hardcoded.	
 	"""
 	A = "2.1.4"
 	B = "1.2"
@@ -33,13 +27,41 @@ def access(charger_id):
 	dev = libb6.Device(charger_id);
 	return dev
 
+def activate_charger():
+	"""
+	Function will be split up later, likely.
+	Catch the device number, then send it to get a profile for the battery in question,
+	then print type of battery (should be lio) and cell count (??). Then start charging
+	the battery.	
+	"""
+	catch_dev = access(Charger.B)
+	chargeProfile = libb6.Device.getDefaultChargeProfile(catch_dev, libb6.BATTERY_TYPE.LIIO)
+	print(chargeProfile.batteryType, chargeProfile.cellCount)
+	catch_dev.startCharging(chargeProfile)
 
-catch_dev = access(Charger.B)
+#Code pertains to the Labjack below this line.
+class LCPs:
+	"""
+	Holds Labjack control pins.
+	"""	
+	find = (0, 2, 4, 6)
+	charge = (7, 5, 3, 1)
 
-chargeProfile = libb6.Device.getDefaultChargeProfile(catch_dev, libb6.BATTERY_TYPE.LIIO)
-print(chargeProfile.batteryType, chargeProfile.cellCount)
-catch_dev.startCharging(chargeProfile)
+labjack_obj = BattLabJack(LCPs.find, LCPs.charge)	
+batterybank_obj = BatteryBank(labjack_obj, 3)
 
+def measure_volts_temp(obj):
+	"""
+	Measure the volts and temperature of each battery in a given board. Arg is battery_bank_obj.
+	"""
+	obj.measure()
+	print(obj.cellVolts)
+	print(obj.cellTemps)
+
+measure_volts_temp(batterybank_obj)
+
+
+#Rambly (and partially useless) notes below this line.
 """
 #.def("startCharging", & b6::Device::startCharging, py::arg("profile"))
 #  1. (self: libb6.libb6.Device, profile: libb6.libb6.ChargeProfile) -> bool
