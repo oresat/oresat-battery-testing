@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 import u6
+import time
 from libb6 import libb6
 from typing import List
 
@@ -31,6 +32,13 @@ class BatteryTestJig:
             print(chargeProfile.batteryType, chargeProfile.cellCount)
             charger.startCharging(chargeProfile)
 
+    def stop(self):
+        for pin in CHARGE_BANK_PINS:
+            self.u6.getFeedback(u6.BitStateWrite(pin, False))
+
+        for pin in MEASURE_PINS:
+            self.u6.getFeedback(u6.BitStateWrite(pin, False))
+
     def set_charge_bank(self, bank: int):
         if bank < 0 or bank > 3:
             raise ValueError("Bank ID is invalid.")
@@ -57,5 +65,15 @@ class BatteryTestJig:
             self.cellTemps[cellNum] = at / avgCount
             """
         return [BankData(0,0)]
+
     
 jig = BatteryTestJig(CHARGERS)
+
+jig.set_charge_bank(3)
+
+jig.stop()
+
+
+
+
+
