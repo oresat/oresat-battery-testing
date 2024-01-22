@@ -3,7 +3,8 @@ from operator import truediv
 
 from .liblabjack import LabJack
 
-#changed liblabjack.Labjack to just LabJack in line below
+
+# changed liblabjack.Labjack to just LabJack in line below
 class BattLabJack(LabJack):
     def __init__(self, senseControlPins, chargeControlPins, relayWait=0.1):
         super().__init__()
