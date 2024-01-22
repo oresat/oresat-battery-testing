@@ -3,35 +3,12 @@ import u6
 from libb6 import libb6
 from typing import List
 
-class Pin(Enum):
-    """
-    A = Pin.MEASURE_3.value (for example)
-    """
-    MEASURE_3 = 3 
-    MEASURE_2 = 4
-    MEASURE_1 = 5
-    MEASURE_0 = 6  
-
-    TEMPERATURE_3 = 13
-    TEMPERATURE_1 = 14
-
-    VOLTAGE_NEG_3 = 15
-    VOLTAGE_NEG_2 = 16
-    VOLTAGE_NEG_1 = 17
-    VOLTAGE_NEG_0 = 18  
-
-    CHARGE_BANK_3 = 21
-    CHARGE_BANK_2 = 22
-    CHARGE_BANK_1 = 23
-    CHARGE_BANK_0 = 24
-
-    TEMPERATURE_2 = 32
-    TEMPERATURE_0 = 33
-
-    VOLTAGE_POS_3 = 34
-    VOLTAGE_POS_2 = 35
-    VOLTAGE_POS_1 = 36
-    VOLTAGE_POS_0 = 37
+#Index is the bank ID.
+MEASURE_PINS = [6, 5, 4, 3]
+TEMPERATURE_PINS = [33, 14, 32, 13]
+VOLTAGE_NEG_PINS = [18, 17, 16, 15]
+CHARGE_BANK_PINS = [24, 23, 22, 21]
+VOLTAGE_POS_PINS = [37, 36, 35, 34]
 
 CHARGERS = [
 #"2.1.4", 
@@ -55,13 +32,30 @@ class BatteryTestJig:
             charger.startCharging(chargeProfile)
 
     def set_charge_bank(self, bank: int):
-        pass
-    
+        if bank < 0 or bank > 3:
+            raise ValueError("Bank ID is invalid.")
+        for pin in CHARGE_BANK_PINS:
+            self.u6.getFeedback(u6.BitStateWrite(pin, False))
+        self.u6.getFeedback(u6.BitStateWrite(CHARGE_BANK_PINS[bank], True))
+
     def get_data(self, bank: int) -> List[BankData]:
         """
         Returns list that contains BankData (temperature and voltage)
         for each cell (which means battery).
         """
+        for pin in TEMPERATURE_PINS:
+            self.u6.getAIN(pin, resolution, gain, settling, diff)
+            """
+            Implement this - take four or however many readings back to back and then average them,
+            for voltage and temperature.
+            for avi in range(avgCount):
+                time.sleep(delay)
+                av += self.lj.analogRead(cellNum * 2, settling=1, diff=True)
+                atv = self.lj.analogRead(cellNum + 8)
+                at += atv
+            self.cellVolts[cellNum] = av / avgCount
+            self.cellTemps[cellNum] = at / avgCount
+            """
         return [BankData(0,0)]
     
 jig = BatteryTestJig(CHARGERS)
