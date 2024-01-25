@@ -21,6 +21,8 @@ For me it is: /etc/udev/rules.d
 This will allow you to run test.py without requiring sudo.
 
 ### Run
+This is currently out-of-date, and I will update it once a new module exists.
+For now, run "python measure.py" from the main directory.
 from oresat-battery-testing:
 "python -m battery_tester"
 
