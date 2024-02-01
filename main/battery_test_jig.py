@@ -63,6 +63,7 @@ class BatteryTestJig:
                 avgVolts += self.u6.getAIN(pin, resolution, gain , settling, diff)
                 time.sleep(0.01)
             avgVolts = avgVolts / 10
+            #BankData[pin] = avgVolts #is this a legal line?
             
             """
             Implement this - take four or however many readings back to back and then average them,
