@@ -52,7 +52,18 @@ class BatteryTestJig:
         for each cell (which means battery).
         """
         for pin in TEMPERATURE_PINS:
-            self.u6.getAIN(pin, resolution, gain, settling, diff)
+            avgTemps = 0.0 
+            for x in range(10):
+                avgTemps += self.u6.getAIN(pin, resolution, gain, settling, diff)
+                time.sleep(0.01)
+            avgTemps = avgTemps / 10
+        for pin in VOLTAGE_POS_PINS:
+            avgVolts = 0.0
+            for x in range(10):
+                avgVolts += self.u6.getAIN(pin, resolution, gain , settling, diff)
+                time.sleep(0.01)
+            avgVolts = avgVolts / 10
+            
             """
             Implement this - take four or however many readings back to back and then average them,
             for voltage and temperature.
@@ -64,7 +75,7 @@ class BatteryTestJig:
             self.cellVolts[cellNum] = av / avgCount
             self.cellTemps[cellNum] = at / avgCount
             """
-        return [BankData(0,0)]
+        return [BankData(avgTemps,avgVolts)]
 
     
 jig = BatteryTestJig(CHARGERS)
