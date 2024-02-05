@@ -17,8 +17,13 @@ LIBB6_SOURCES = \
 	$(LIBB6_SRC)/Device.cc \
 	$(LIBB6_SRC)/Packet.cc
 
-CFLAGS = -std=c++11 -fPIC $(INC_DIRS) $(shell pkg-config --cflags --libs libusb-1.0) $(shell python3 -m pybind11 --includes)
-LDFLAGS = -lusb-1.0 #$(shell python3-config --ldflags)
+CFLAGS = -std=c++11 -fPIC $(INC_DIRS) $(shell pkg-config --cflags libusb-1.0) \
+				 $(shell python3 -m pybind11 --includes)
+
+LDFLAGS = $(shell pkg-config --libs libusb-1.0)
+ifeq ($(shell uname -s), Darwin)
+	LDFLAGS += -Wl,-ld_classic -undefined dynamic_lookup
+endif
 
 OBJS = $(PYLIB_SOURCES:%.cpp=$(BUILD_DIR)/%.o) $(LIBB6_SOURCES:%.cc=$(BUILD_DIR)/%.o)
 
