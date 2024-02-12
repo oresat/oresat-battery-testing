@@ -30,6 +30,7 @@ class BatteryTestJig:
         for charger in self.chargers:    
             chargeProfile = libb6.Device.getDefaultChargeProfile(charger, libb6.BATTERY_TYPE.LIIO)
             print(chargeProfile.batteryType, chargeProfile.cellCount)
+            charger.setBuzzers(False,False)
             charger.startCharging(chargeProfile)
 
     def stop(self):
@@ -51,38 +52,41 @@ class BatteryTestJig:
         Returns list that contains BankData (temperature and voltage)
         for each cell (which means battery).
         """
-        for pin in TEMPERATURE_PINS:
+        data_list = []
+        resolution = 1
+        gain = 0
+        settling = 0
+        diff = False
+
+        for pin in MEASURE_PINS:
+            self.u6.getFeedback(u6.BitStateWrite(pin, False))
+        self.u6.getFeedback(u6.BitStateWrite(MEASURE_PINS[bank], True))
+
+        for temp_pin, volt_pin in zip(TEMPERATURE_PINS, VOLTAGE_POS_PINS):
+         
             avgTemps = 0.0 
             for x in range(10):
-                avgTemps += self.u6.getAIN(pin, resolution, gain, settling, diff)
+                avgTemps += self.u6.getAIN(temp_pin, resolution, gain, settling, diff)
                 time.sleep(0.01)
             avgTemps = avgTemps / 10
-        for pin in VOLTAGE_POS_PINS:
+            
             avgVolts = 0.0
             for x in range(10):
-                avgVolts += self.u6.getAIN(pin, resolution, gain , settling, diff)
+                avgVolts += self.u6.getAIN(volt_pin, resolution, gain, settling, diff)
                 time.sleep(0.01)
             avgVolts = avgVolts / 10
-            #BankData[pin] = avgVolts #is this a legal line?
+            data = BankData(avgTemps, avgVolts)
+            data_list.append(data)
             
-            """
-            Implement this - take four or however many readings back to back and then average them,
-            for voltage and temperature.
-            for avi in range(avgCount):
-                time.sleep(delay)
-                av += self.lj.analogRead(cellNum * 2, settling=1, diff=True)
-                atv = self.lj.analogRead(cellNum + 8)
-                at += atv
-            self.cellVolts[cellNum] = av / avgCount
-            self.cellTemps[cellNum] = at / avgCount
-            """
-        return [BankData(avgTemps,avgVolts)]
-
+        return data_list
     
 jig = BatteryTestJig(CHARGERS)
 
 jig.set_charge_bank(3)
 
+print(jig.get_data(3))
+
+time.sleep(5)
 jig.stop()
 
 
