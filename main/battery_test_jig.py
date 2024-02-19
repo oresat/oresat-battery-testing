@@ -9,7 +9,7 @@ from typing import List
 MEASURE_PINS = [0, 2, 4, 6]
 TEMPERATURE_PINS = [33, 14, 32, 13]
 VOLTAGE_NEG_PINS = [18, 17, 16, 15]
-CHARGE_BANK_PINS = [24, 23, 22, 21]
+CHARGE_BANK_PINS = [7, 5, 3, 1]
 VOLTAGE_POS_PINS = [37, 36, 35, 34]
 
 CHARGERS = [
@@ -92,7 +92,7 @@ jig.set_charge_bank(3)
 
 print(jig.get_data(3))
 
-time.sleep(3)
+time.sleep(2)
 jig.stop()
 
 
