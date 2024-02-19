@@ -25,14 +25,18 @@ class BankData:
     voltage: float
 
 class BatteryTestJig:
-    def __init__(self, ids: List[str]):
+    def __init__(self, ids: List[str], flag):
         self.u6 = u6.U6()        
         self.chargers = [libb6.Device(id) for id in ids]
         for charger in self.chargers:    
             chargeProfile = libb6.Device.getDefaultChargeProfile(charger, libb6.BATTERY_TYPE.LIIO)
             print(chargeProfile.batteryType, chargeProfile.cellCount)
             charger.setBuzzers(False,False)
-            charger.startCharging(chargeProfile)
+            if flag != 0:
+                charger.startCharging(chargeProfile)
+                print("\nFlag == 1. Charging.\n")
+            else:
+                print("\nFlag == 0. Not charging.\n")
 
     def stop(self):
         for pin in CHARGE_BANK_PINS:
@@ -85,14 +89,31 @@ class BatteryTestJig:
             data_list.append(data)
             
         return data_list
-    
-jig = BatteryTestJig(CHARGERS)
+  
+#Scaffolding GUI for testing purposes. 
+flag = input("Do you want to begin charging batteries?\n0: No.\n1: Yes\nInput: ") 
 
-jig.set_charge_bank(3)
+chargeChoice = int(-1)
+while chargeChoice != 0 and chargeChoice != 1 and chargeChoice != 2 and chargeChoice != 3:
+    chargeChoice = int(input("\nSet bank to charge (0, 1, 2, or 3).\nInput: "))
+    if chargeChoice != 0 and chargeChoice != 1 and chargeChoice != 2 and chargeChoice != 3:
+        print("Bank out of bounds. Choose 0, 1, 2, or 3. It ain't that difficult!\n")
 
-print(jig.get_data(3))
+senseChoice = int(-1)
+while senseChoice != 0 and senseChoice != 1 and senseChoice != 2 and senseChoice != 3:
+    senseChoice = int(input("\nSet bank to read temp/volts from (0, 1, 2, or 3).\nInput: "))
+    if senseChoice != 0 and senseChoice != 1 and senseChoice != 2 and senseChoice != 3:
+        print("Bank out of bounds. Choose 0, 1, 2, or 3. It ain't that difficult!\n")
 
-time.sleep(2)
+sleepTimeChoice = float(input("\nNumber of seconds before program terminates.\nInput: "))
+
+jig = BatteryTestJig(CHARGERS, flag)
+
+jig.set_charge_bank(chargeChoice)
+
+print(jig.get_data(senseChoice))
+
+time.sleep(sleepTimeChoice)
 jig.stop()
 
 
