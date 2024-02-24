@@ -1,0 +1,5 @@
+pybind11
+black
+isort
+pylama
+LabJackPython

@@ -17,31 +17,153 @@
  */
 
 #include "Device.hh"
+#include<string>
+#include<iostream>
+#include<stdint.h>
+
 
 namespace b6 {
+  /* Note that our custom constructor is below the first one. */
   Device::Device() {
     int err = libusb_init(&m_libusbCtx);
     if (err != 0) {
       throw std::runtime_error("libusb err: " + std::to_string(err));
     }
     m_dev = libusb_open_device_with_vid_pid(m_libusbCtx, B6_VENDOR_ID, B6_PRODUCT_ID);
-	 //use libusb_open not the above function - look at libusb documentation to figure out how to use libusb_open
-    //will be tricky (need to be able to pass in variable to specify which device will be opened)
-    //can use id path instead of serial number (would be based on usb port on my computer) - this will not be universal to everyone though
-    /*
-    Discover devices using libusb_get_device_list().
 
-    Choose the device that you want to operate, and call libusb_open().
-
-    Unref all devices in the discovered device list.
-
-    Free the discovered device list.
-
-    will also need to modify the files in oresat-bat-test libraries (for talking between C and python)
-
-    */
     if (m_dev == nullptr) {
       throw std::runtime_error("cannot find/open b6 device");
+    }
+
+    if (libusb_kernel_driver_active(m_dev, 0) == 1) {
+      m_hadKernelDriver = true;
+      err = libusb_detach_kernel_driver(m_dev, 0);
+      if (err != 0) {
+        throw std::runtime_error("cannot detach kernel driver, err: " + std::to_string(err));
+      }
+    }
+    err = libusb_claim_interface(m_dev, 0);
+    if (err != 0) {
+      throw std::runtime_error("cannot claim interface 0, err: " + std::to_string(err));
+    }
+
+    m_getDevInfo();
+  }
+
+  /**
+   * Custom constructor that takes in a port number and then checks each device
+   * plugged in via USB until it finds the one that matches said argument port
+   * number. Then it opens that one.
+   */
+  Device::Device(const std::string & location) {
+    int loc_i{0};                   // tracker for location index
+    int path_i{0};                  // tracker for path index
+    libusb_device *b6dev = nullptr; // check if we've b6dev the correct charger
+    libusb_device *dev = nullptr;   /* changed this to nullptr */
+    libusb_device **devs;
+    int i = 0;
+    uint8_t path[8];     // the device we're on
+    uint8_t loc_path[8]; // the device we want
+
+    // Put string nums into path array.
+    while (location[loc_i]) {
+      if (location[loc_i] != '.' && location[loc_i] != '-') {
+        int to_add = location[loc_i] - '0';
+        loc_path[path_i] = to_add;
+        ++loc_i;
+         ++path_i;
+      } else {
+        ++loc_i;
+      }
+    }
+
+#ifdef DEBUG
+    std::cout << "location: " << location << std::endl;
+    printf("loc_i: %d\npath_i: %d\n", loc_i, path_i);
+
+    printf("loc_path: ");
+    for (int k=0; k<path_i; k++) {
+      printf("%d ", loc_path[k]);
+    }
+    printf("\n\n");
+#endif
+
+
+    int err = libusb_init(&m_libusbCtx);
+    if (err != 0) {
+      throw std::runtime_error("libusb err: " + std::to_string(err));
+    }
+
+    err = libusb_get_device_list(NULL, &devs); // list is OPEN
+    if (err < 0) {
+      throw std::runtime_error("libusb err: " + std::to_string(err));
+    }
+
+    while ((dev = devs[i++]) != NULL) {
+      struct libusb_device_descriptor desc;
+      err = libusb_get_device_descriptor(dev, &desc);
+      if (err < 0) {
+        throw std::runtime_error("libusb err: " + std::to_string(err));
+      }
+
+      if (desc.idVendor != B6_VENDOR_ID || desc.idProduct != B6_PRODUCT_ID)
+        continue;
+
+      err = libusb_get_port_numbers(dev, path, path_i - 1);
+      if (err < 0)
+        continue;
+
+      uint8_t bus_num = libusb_get_bus_number(dev);
+      if (bus_num != loc_path[0] || bus_num == 0)
+        continue; // bus num does not match
+
+#ifdef DEBUG
+      printf("path: ");
+      for (int k=0; k<path_i - 1; k++) {
+          printf("%d ", path[k]);
+      }
+      printf("\n");
+#endif
+
+      for (int j = 0; j < path_i - 1; j++) {
+#ifdef DEBUG
+        printf("  %d %d\n", path[j], loc_path[j + 1]);
+#endif
+        if (path[j] != loc_path[j + 1]) {
+          b6dev = nullptr;
+          break;
+        }
+        b6dev = dev;
+      }
+
+      if (b6dev != nullptr) {
+        break;
+      }
+    }
+
+#ifdef DEBUG
+    printf("device ptr: %p\n", b6dev);
+#endif
+
+    // free_device_list expects all unwanted devices to be unreferenced
+    while ((dev = devs[i++]) != NULL) {
+      if (b6dev != dev && b6dev != nullptr) {
+        libusb_unref_device(dev);
+      }
+    }
+
+    libusb_free_device_list(devs, 0);
+
+    dev = b6dev; // dev is device last accessed, but b6dev is the correct device
+    if (dev == nullptr) {
+      throw std::runtime_error("libusb did not find device");
+    }
+
+    err = libusb_open(dev, &m_dev); // Device_Names.c contents will be in here
+    if (err < 0) {
+      std::string err_str = "cannot find/open b6 device: ";
+      err_str += libusb_error_name(err);
+      throw std::runtime_error(err_str);
     }
 
     if (libusb_kernel_driver_active(m_dev, 0) == 1) {
@@ -67,7 +189,7 @@ namespace b6 {
       }
       libusb_close(m_dev);
     }
-    libusb_exit(m_libusbCtx);
+    libusb_exit(m_libusbCtx); /* This line might be unnecessary. */
   }
 
   SysInfo Device::getSysInfo() {
@@ -101,13 +223,13 @@ namespace b6 {
     res.skip(4);
 
     info.state = res.readU8(); // TODO: finish enum STATE and convert this
-	
-	 /*
+
+
     if (info.state == static_cast<int>(STATE::ERROR_1) || info.state == static_cast<int>(STATE::ERROR_2)) {
       m_throwError(static_cast<ERROR>(res.readU16()));
+     //need to figure out what this error is, but bypassing works for now - looks like this error might have solved itself
     }
-	 */
-	 //need to figure out what this error is, but bypassing works for now
+
     info.capacity = res.readU16();
     info.time = res.readU16();
     info.voltage = res.readU16();
@@ -162,7 +284,7 @@ namespace b6 {
     }
   }
 
-  ChargingError Device::m_throwError(ERROR err) {
+  void Device::m_throwError(ERROR err) {
     switch (err) {
       case ERROR::CONNECTION_BROKEN_1:
       case ERROR::CONNECTION_BROKEN_2:
@@ -348,4 +470,5 @@ namespace b6 {
 
     return profile;
   }
+
 }

@@ -40,6 +40,7 @@ fp-info-cache
 # gcc/g++
 *.o
 *.so
+*.out
 
 # python
 *.pyc
