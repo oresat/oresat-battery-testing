@@ -3,3 +3,4 @@ black
 isort
 pylama
 LabJackPython
+TestProgr
