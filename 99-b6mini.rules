@@ -2,9 +2,4 @@
 
 SUBSYSTEM=="usb", ATTRS{idVendor}=="0000", ATTRS{idProduct}=="0001", MODE:="666", GROUP="plugdev"
 KERNEL=="hidraw*", ATTRS{idVendor}=="0000", ATTRS{idProduct}=="0001", MODE:="666", GROUP="plugdev"
-#All devpaths except for 1.2 do not work. This may not be a problem with the devpath itself.
-SUBSYSTEM=="tty",   DEVPATH=="*2.1.4*". SYMLINK+="ttyCHARGERA"
-SUBSYSTEM=="tty",   DEVPATH=="*1.2*". SYMLINK+="ttyCHARGERB"
-SUBSYSTEM=="tty",   DEVPATH=="*2.3*". SYMLINK+="ttyCHARGERC"
-SUBSYSTEM=="tty",   DEVPATH=="*1.4*". SYMLINK+="ttyCHARGERD"
 
