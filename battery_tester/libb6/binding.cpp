@@ -78,7 +78,6 @@ PYBIND11_MODULE(libb6, m) {
 		//.def(name of function), & makes pointer to function, py::arg sets argument names
 		.def(py::init<>())
 		.def(py::init<const std::string &>())
-		//.def(py::init<const std::string &>())
 		
 		.def("getSysInfo", & b6::Device::getSysInfo)
 		.def("getChargeInfo", & b6::Device::getChargeInfo)
@@ -135,13 +134,3 @@ PYBIND11_MODULE(libb6, m) {
 	py::register_exception<b6::ErrorUnknown>(m, "ErrorUnknown");
 
 }
-
-
-
-/*
-Neat Python Tip:
- *def example(abc: str) -> float: #specifies return type float, abc is a string, print out that arg type is string
- 	print(abc)
-	return 1.5
- */
-

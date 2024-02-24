@@ -15,7 +15,7 @@ V1.0 of the PCB layout:
 ### Udev Setup
 Copy the .rules files (from the Battery Tester folder) into the folder on your computer which contains rules files for udev.
 
-For me it is: /etc/udev/rules.d
+For example on an Ubuntu system: /etc/udev/rules.d
 
 This will allow you to run [filename].py without requiring sudo.
 

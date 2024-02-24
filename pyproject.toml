@@ -20,11 +20,9 @@ classifiers = [
 ]
 dependencies = [
 	 "pybind11",
+     "LabJackPython",
 ]
 dynamic = ["version"]
-
-[tool.setuptools.dynamic]
-version = {attr = "oresat_cfc.__version__"}
 
 [tool.black]
 line_length = 100
@@ -42,10 +40,6 @@ linters = "pycodestyle,pyflakes,pylint,mccabe,mypy,radon"
 # R0914:    Too many local variables
 ignore = "C0103,E203,W0613,R0902,R901,R0913,R0914"
 max_line_length = 100
-
-[[tool.mypy.overrides]]
-module = "canopen,olaf,tifffile,spidev"
-ignore_missing_imports = true
 
 [tool.isort]
 profile = "black"

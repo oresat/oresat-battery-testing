@@ -1,6 +1,7 @@
-import time
 import csv
+import time
 from datetime import datetime
+
 
 # Code pertains to storing data in a CSV file.
 def stamper():
