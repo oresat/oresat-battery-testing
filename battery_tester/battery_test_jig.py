@@ -8,7 +8,8 @@ from libb6 import libb6
 # Index is the bank ID.
 
 MEASURE_PINS = [0, 2, 4, 6]
-TEMPERATURE_PINS = [33, 14, 32, 13]
+#TEMPERATURE_PINS = [33, 14, 32, 13]
+TEMPERATURE_PINS = [8, 9, 10, 11]
 VOLTAGE_NEG_PINS = [18, 17, 16, 15]
 CHARGE_BANK_PINS = [7, 5, 3, 1]
 VOLTAGE_POS_PINS = [37, 36, 35, 34]
@@ -64,25 +65,27 @@ class BatteryTestJig:
         for each cell (which means battery).
         """
         data_list = []
-        resolution = 1
+        resolution = 0
         gain = 0
         settling = 0
-        diff = False
+        voltage_measure_diff = True
+        temperature_measure_diff = False
 
         for pin in MEASURE_PINS:
             self.u6.getFeedback(u6.BitStateWrite(pin, False))
         self.u6.getFeedback(u6.BitStateWrite(MEASURE_PINS[bank], True))
+        time.sleep(1)
 
-        for temp_pin, volt_pin in zip(TEMPERATURE_PINS, VOLTAGE_POS_PINS):
+        for temp_pin, volt_pin in zip(TEMPERATURE_PINS, MEASURE_PINS):
             avgTemps = 0.0
             for x in range(10):
-                avgTemps += self.u6.getAIN(temp_pin, resolution, gain, settling, diff)
+                avgTemps += self.u6.getAIN(temp_pin, resolution, gain, settling, temperature_measure_diff)
                 time.sleep(0.01)
             avgTemps = avgTemps / 10
 
             avgVolts = 0.0
             for x in range(10):
-                avgVolts += self.u6.getAIN(volt_pin, resolution, gain, settling, diff)
+                avgVolts += self.u6.getAIN(volt_pin, resolution, gain, settling, voltage_measure_diff)
                 time.sleep(0.01)
             avgVolts = avgVolts / 10
             data = BankData(avgTemps, avgVolts)
@@ -112,7 +115,11 @@ jig = BatteryTestJig(CHARGERS, flag)
 
 jig.set_charge_bank(chargeChoice)
 
-print(jig.get_data(senseChoice))
+data = jig.get_data(senseChoice)
+for i in data:
+    print(f"Temperature: {i.temperature}")
+    print(f"Voltage: {i.voltage}")
+    print()
 
 time.sleep(sleepTimeChoice)
 jig.stop()
