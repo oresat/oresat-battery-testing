@@ -76,7 +76,6 @@ class BatteryTestJig:
         kelvinToCelsius = 273.15
 
         resistance = resInitial * ((voltageDefault / num) - 1)
-        print(f"Resistance (R) = {resistance}")
         actualTemp = 1/(1/tempRef + 1/betaValue * math.log(resistance/resInitial))
         
         return actualTemp - 273.15
