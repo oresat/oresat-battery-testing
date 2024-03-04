@@ -1,4 +1,4 @@
-import time
+jmport time
 import math
 from dataclasses import dataclass
 from typing import List
@@ -21,6 +21,12 @@ CHARGERS = [
     # "1-2.4"
 ]
 
+"""
+Battery bank 3 and 2 work with this code. There is a problem with battery bank 3 where I only get
+two resistance readings and one is a very negative value which makes no sense.
+Possible hardware problem. 
+
+"""
 
 @dataclass
 class BankData:
@@ -74,8 +80,8 @@ class BatteryTestJig:
         resInitial = 10000
         voltageDefault = 5
         kelvinToCelsius = 273.15
-
         resistance = resInitial * ((voltageDefault / num) - 1)
+        print(f"Resistance (R) = {resistance}")
         actualTemp = 1/(1/tempRef + 1/betaValue * math.log(resistance/resInitial))
         
         return actualTemp - 273.15
