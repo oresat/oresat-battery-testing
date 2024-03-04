@@ -1,4 +1,5 @@
 import time
+import math
 from dataclasses import dataclass
 from typing import List
 
@@ -34,14 +35,19 @@ class BatteryTestJig:
         for charger in self.chargers:
             chargeProfile = libb6.Device.getDefaultChargeProfile(charger, libb6.BATTERY_TYPE.LIIO)
             print(chargeProfile.batteryType, chargeProfile.cellCount)
+
             charger.setBuzzers(False, False)
-            if flag != 0:
+            
+            if flag == True:
                 charger.startCharging(chargeProfile)
                 print("\nFlag == 1. Charging.\n")
             else:
-                print("\nFlag == 0. Not charging.\n")
+                print("\nFlag != 1. Not charging.\n")
 
     def stop(self):
+        """
+        Stop charging and measuring.
+        """
         for pin in CHARGE_BANK_PINS:
             self.u6.setDOState(pin, 0)
 
@@ -57,7 +63,24 @@ class BatteryTestJig:
         for pin in CHARGE_BANK_PINS:
             self.u6.getFeedback(u6.BitStateWrite(pin, False))
         self.u6.getFeedback(u6.BitStateWrite(CHARGE_BANK_PINS[bank], True))
+    
+    def get_actual_temp(self, num):
+        """
+        num is the original measurement of a given battery cell, avgTemps. 
+        Convert thermistor value to voltage and then to degrees Celsius.
+        """ 
+        tempRef = 295.15
+        betaValue = 3380
+        resInitial = 10000
+        voltageDefault = 5
+        kelvinToCelsius = 273.15
 
+        resistance = resInitial * ((voltageDefault / num) - 1)
+        print(f"Resistance (R) = {resistance}")
+        actualTemp = 1/(1/tempRef + 1/betaValue * math.log(resistance/resInitial))
+        
+        return actualTemp - 273.15
+    
     def get_data(self, bank: int) -> List[BankData]:
         """
         Returns list that contains BankData (temperature and voltage)
@@ -81,20 +104,22 @@ class BatteryTestJig:
                 avgTemps += self.u6.getAIN(temp_pin, resolution, gain, settling, temperature_measure_diff)
                 time.sleep(0.01)
             avgTemps = avgTemps / 10
+            actualTemp = jig.get_actual_temp(avgTemps)
 
             avgVolts = 0.0
             for x in range(10):
                 avgVolts += self.u6.getAIN(volt_pin, resolution, gain, settling, voltage_measure_diff)
                 time.sleep(0.01)
             avgVolts = avgVolts / 10
-            data = BankData(avgTemps, avgVolts)
+             
+            data = BankData(actualTemp, avgVolts)
             data_list.append(data)
 
         return data_list
 
 
 # Scaffolding GUI for testing purposes.
-flag = input("Do you want to begin charging batteries?\n0: No.\n1: Yes\nInput: ")
+flag = int(input("Do you want to begin charging batteries?\n0: No.\n1: Yes\nInput: "))
 
 chargeChoice = int(-1)
 while chargeChoice != 0 and chargeChoice != 1 and chargeChoice != 2 and chargeChoice != 3:
