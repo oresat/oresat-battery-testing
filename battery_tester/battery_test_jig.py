@@ -8,7 +8,6 @@ import u6
 from libb6 import libb6
 
 # Index is the bank ID.
-
 MEASURE_PINS = [0, 2, 4, 6]
 TEMPERATURE_PINS = [8, 9, 10, 11]
 VOLTAGE_NEG_PINS = [18, 17, 16, 15]
