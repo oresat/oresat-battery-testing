@@ -1,4 +1,5 @@
 import time
+from enum import Enum
 import math
 from dataclasses import dataclass
 from typing import List
@@ -14,6 +15,10 @@ VOLTAGE_NEG_PINS = [18, 17, 16, 15]
 CHARGE_BANK_PINS = [7, 5, 3, 1]
 VOLTAGE_POS_PINS = [37, 36, 35, 34]
 
+class ChargeMode(Enum):
+    CHARGE = 0
+    DISCHARGE = 1
+
 CHARGERS = [
     # "2.1.4",
     "1.2",
@@ -27,9 +32,8 @@ class BankData:
     temperature: float
     voltage: float
 
-
 class BatteryTestJig:
-    def __init__(self, ids: List[str], flag):
+    def __init__(self, ids: List[str], chargeFlag, dischargeFlag):
         self.u6 = u6.U6()
         self.chargers = [libb6.Device(id) for id in ids]
         for charger in self.chargers:
@@ -38,11 +42,18 @@ class BatteryTestJig:
 
             charger.setBuzzers(False, False)
             
-            if flag == True:
-                charger.startCharging(chargeProfile)
+            if chargeFlag == True:
                 print("\nFlag == 1. Charging.\n")
+                charger.startCharging(chargeProfile)
             else:
                 print("\nFlag != 1. Not charging.\n")
+
+            if dischargeFlag == True:
+                print("\nCommencing discharge...\n")
+                chargeProfile.mode = ChargeMode.DISCHARGE.value
+                charger.startCharging(chargeProfile)
+            else:
+                print("\nNot discharging.\n")
 
     def stop(self):
         """
@@ -117,33 +128,39 @@ class BatteryTestJig:
 
         return data_list
 
+if __name__  == "__main__":
+    # Scaffolding GUI for testing purposes.
+    chargeFlag = int(input("Do you want to begin charging batteries?\n0: No.\n1: Yes\nInput: "))
+    if chargeFlag == False:
+        dischargeFlag = int(input("Would you like to discharge?\n0: No.\n1: Yes\nInput:  "))
+        if dischargeFlag == True:
+            print("\nCommencing discharge...\n")
+        else:
+            print("\nAye, will not discharge.\n")
 
-# Scaffolding GUI for testing purposes.
-flag = int(input("Do you want to begin charging batteries?\n0: No.\n1: Yes\nInput: "))
+    chargeChoice = int(-1)
+    while chargeChoice != 0 and chargeChoice != 1 and chargeChoice != 2 and chargeChoice != 3:
+        chargeChoice = int(input("\nSet bank to charge (0, 1, 2, or 3).\nInput: "))
+        if chargeChoice != 0 and chargeChoice != 1 and chargeChoice != 2 and chargeChoice != 3:
+            print("Bank out of bounds. Choose 0, 1, 2, or 3. It ain't that difficult!\n")
 
-chargeChoice = int(-1)
-while chargeChoice != 0 and chargeChoice != 1 and chargeChoice != 2 and chargeChoice != 3:
-    chargeChoice = int(input("\nSet bank to charge (0, 1, 2, or 3).\nInput: "))
-    if chargeChoice != 0 and chargeChoice != 1 and chargeChoice != 2 and chargeChoice != 3:
-        print("Bank out of bounds. Choose 0, 1, 2, or 3. It ain't that difficult!\n")
+    senseChoice = int(-1)
+    while senseChoice != 0 and senseChoice != 1 and senseChoice != 2 and senseChoice != 3:
+        senseChoice = int(input("\nSet bank to read temp/volts from (0, 1, 2, or 3).\nInput: "))
+        if senseChoice != 0 and senseChoice != 1 and senseChoice != 2 and senseChoice != 3:
+            print("Bank out of bounds. Choose 0, 1, 2, or 3. It ain't that difficult!\n")
 
-senseChoice = int(-1)
-while senseChoice != 0 and senseChoice != 1 and senseChoice != 2 and senseChoice != 3:
-    senseChoice = int(input("\nSet bank to read temp/volts from (0, 1, 2, or 3).\nInput: "))
-    if senseChoice != 0 and senseChoice != 1 and senseChoice != 2 and senseChoice != 3:
-        print("Bank out of bounds. Choose 0, 1, 2, or 3. It ain't that difficult!\n")
+    sleepTimeChoice = float(input("\nNumber of seconds before program terminates.\nInput: "))
 
-sleepTimeChoice = float(input("\nNumber of seconds before program terminates.\nInput: "))
+    jig = BatteryTestJig(CHARGERS, chargeFlag, dischargeFlag)
 
-jig = BatteryTestJig(CHARGERS, flag)
+    jig.set_charge_bank(chargeChoice)
 
-jig.set_charge_bank(chargeChoice)
+    data = jig.get_data(senseChoice)
+    for i in data:
+        print(f"Temperature: {i.temperature}")
+        print(f"Voltage: {i.voltage}")
+        print()
 
-data = jig.get_data(senseChoice)
-for i in data:
-    print(f"Temperature: {i.temperature}")
-    print(f"Voltage: {i.voltage}")
-    print()
-
-time.sleep(sleepTimeChoice)
-jig.stop()
+    time.sleep(sleepTimeChoice)
+    jig.stop()
