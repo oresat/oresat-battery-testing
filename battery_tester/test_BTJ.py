@@ -22,6 +22,6 @@ def test_charge_bank_pins(index, expected):
 def test_voltage_pos_pins(index, expected):
     assert BTJ.VOLTAGE_POS_PINS[index] == expected, "Check VOLTAGE_POS_PINS in battery_test_jig.py"
 
-@pytest.mark.parametrize("index, expected", [(0,1.2)])
+@pytest.mark.parametrize("index, expected", [(0, "2.1.4"), (1,"1.2"), (2, "2.3"), (3, "1-2.4")])
 def test_charger_serial_nums(index, expected):
     assert BTJ.CHARGERS[index] == expected, "Check CHARGERS in battery_test_jig.py"

@@ -19,7 +19,7 @@ class ChargeMode(Enum):
     DISCHARGE = 1
 
 CHARGERS = [
-    # "2.1.4",
+    #"2.1.4",
     "1.2",
     # "2.3",
     # "1-2.4"
@@ -73,7 +73,7 @@ class BatteryTestJig:
         for pin in CHARGE_BANK_PINS:
             self.u6.getFeedback(u6.BitStateWrite(pin, False))
         self.u6.getFeedback(u6.BitStateWrite(CHARGE_BANK_PINS[bank], True))
-    
+
     def get_actual_temp(self, num):
         """
         num is the original measurement of a given battery cell, avgTemps. 
@@ -127,8 +127,9 @@ class BatteryTestJig:
 
         return data_list
 
+# Scaffolding GUI for testing purposes.
 if __name__  == "__main__":
-    # Scaffolding GUI for testing purposes.
+    dischargeFlag = 0
     chargeFlag = int(input("Do you want to begin charging batteries?\n0: No.\n1: Yes\nInput: "))
     if chargeFlag == False:
         dischargeFlag = int(input("Would you like to discharge?\n0: No.\n1: Yes\nInput:  "))
