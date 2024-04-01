@@ -12,4 +12,9 @@ BTJ = battery_test_jig.BatteryTestJig
 def charge_one_battery(bank: int, cell: int):
    BTJ.set_charge_bank(BTJ, bank)
 
-charge_one_battery(3, 3)
+def charge_one_bank(bank: int, voltage: int, chargeMode):
+    BTJ.set_charge_bank(BTJ, bank)
+    #set voltage to charge to via:
+    #profile.cellDischargeVoltage = 3100;
+    #profile.endVoltage = 4200;
+    #Device.cc line 448

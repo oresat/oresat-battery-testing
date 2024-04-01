@@ -32,14 +32,20 @@ class BankData:
     voltage: float
 
 class BatteryTestJig:
-    def __init__(self, ids: List[str], chargeFlag, dischargeFlag):
+    def __init__(self, ids: List[str]):
+        # preconditions : ids must be valid usb paths, tested in libb6
+        # postconditions: 
         self.u6 = u6.U6()
         self.chargers = [libb6.Device(id) for id in ids]
+        """Turn off beeps.""" 
+        charger.setBuzzers(False, False)
+    
+    def setup(self, chargeFlag, dischargeFlag):
+        # preconditions: none
+        # postconditions: 
         for charger in self.chargers:
             chargeProfile = libb6.Device.getDefaultChargeProfile(charger, libb6.BATTERY_TYPE.LIIO)
             print(chargeProfile.batteryType, chargeProfile.cellCount)
-
-            charger.setBuzzers(False, False)
             
             if chargeFlag == True:
                 print("\nFlag == 1. Charging.\n")
@@ -74,7 +80,7 @@ class BatteryTestJig:
             self.u6.getFeedback(u6.BitStateWrite(pin, False))
         self.u6.getFeedback(u6.BitStateWrite(CHARGE_BANK_PINS[bank], True))
 
-    def get_actual_temp(self, num):
+    def get_actual_temp(self, num) -> float:
         """
         num is the original measurement of a given battery cell, avgTemps. 
         Convert thermistor value to voltage and then to degrees Celsius.
@@ -152,7 +158,9 @@ if __name__  == "__main__":
 
     sleepTimeChoice = float(input("\nNumber of seconds before program terminates.\nInput: "))
 
-    jig = BatteryTestJig(CHARGERS, chargeFlag, dischargeFlag)
+    jig = BatteryTestJig(CHARGERS)
+    
+    jig.setup(chargeFlag, dischargeFlag)
 
     jig.set_charge_bank(chargeChoice)
 

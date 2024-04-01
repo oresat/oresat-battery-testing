@@ -445,7 +445,7 @@ namespace b6 {
         profile.endVoltage = 4200;
         break;
       case BATTERY_TYPE::LIIO:
-        profile.cellDischargeVoltage = 3100;
+        profile.cellDischargeVoltage = 3000;
         profile.endVoltage = 4200;
         break;
       case BATTERY_TYPE::LIFE:
