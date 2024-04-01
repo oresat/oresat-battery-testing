@@ -40,7 +40,7 @@ class BatteryTestJig:
         """Turn off beeps.""" 
         charger.setBuzzers(False, False)
     
-    def setup(self, chargeFlag, dischargeFlag):
+    def setup(self, chargeFlag = False, dischargeFlag = False):
         # preconditions: none
         # postconditions: 
         for charger in self.chargers:
