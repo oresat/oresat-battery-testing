@@ -38,7 +38,6 @@ class BatteryTestJig:
         self.u6 = u6.U6()
         self.chargers = [libb6.Device(id) for id in ids]
         """Turn off beeps.""" 
-        charger.setBuzzers(False, False)
     
     def setup(self, chargeFlag = False, dischargeFlag = False):
         # preconditions: none
@@ -47,6 +46,8 @@ class BatteryTestJig:
             chargeProfile = libb6.Device.getDefaultChargeProfile(charger, libb6.BATTERY_TYPE.LIIO)
             print(chargeProfile.batteryType, chargeProfile.cellCount)
             
+            charger.setBuzzers(False, False)
+        
             if chargeFlag == True:
                 print("\nFlag == 1. Charging.\n")
                 charger.startCharging(chargeProfile)
@@ -55,6 +56,7 @@ class BatteryTestJig:
 
             if dischargeFlag == True:
                 print("\nCommencing discharge...\n")
+                breakpoint()
                 chargeProfile.mode = ChargeMode.DISCHARGE.value
                 charger.startCharging(chargeProfile)
             else:
@@ -120,7 +122,7 @@ class BatteryTestJig:
                 avgTemps += self.u6.getAIN(temp_pin, resolution, gain, settling, temperature_measure_diff)
                 time.sleep(0.01)
             avgTemps = avgTemps / 10
-            actualTemp = jig.get_actual_temp(avgTemps)
+            actualTemp = self.get_actual_temp(avgTemps)
 
             avgVolts = 0.0
             for x in range(10):

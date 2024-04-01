@@ -1,5 +1,3 @@
-import battery_test_jig
-
 def charge_one_battery(BTJ, bank: int, cell: int):
    
     BTJ.set_charge_bank(BTJ, bank)
