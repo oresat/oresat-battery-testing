@@ -18,11 +18,12 @@ class ChargeMode(Enum):
     CHARGE = 0
     DISCHARGE = 1
 
+#USB path numbers look weird. Check why later.
 CHARGERS = [
-    #"2.1.4",
-    "1.2",
-    # "2.3",
-    # "1-2.4"
+    "1-1.4",#A
+    "1-2",#B
+    "1-3",#C
+    "1-4" #D
 ]
 
 

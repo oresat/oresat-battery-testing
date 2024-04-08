@@ -34,7 +34,7 @@ def output_measurements(bank: int):
 
 #Write bankdata to CSV file.
 
-for x in range(4):
+for x in range(1,2):
     output_measurements(x) 
     print()
     print("Charging...")
@@ -42,14 +42,6 @@ for x in range(4):
     charge_one_bank(x)
     print()
     print("Charging complete.")
-    print()
-    output_measurements(x) 
-    print()
-    print("Discharging...")
-    print()
-    discharge_one_bank(x)
-    print()
-    print("Discharging complete.")
     print()
     output_measurements(x) 
     print()
