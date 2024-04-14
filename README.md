@@ -29,3 +29,6 @@ python battery_test_jig
 
 If you get an import error about libb6:
 ...run the Makefile in main/libb6 to make an object file.
+
+### Battery Cells
+In each bank are four battery slots. The battery slot on each bank that is closest to the LabJack is slot D, then up from there is C, B, and A. Each battery slot corresponds to the charger of the same designation. If Battery A (on whichever battery bank currently selected) is not charging, something may be wrong with Charger A, for instance.

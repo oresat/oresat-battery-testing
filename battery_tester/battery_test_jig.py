@@ -26,7 +26,6 @@ CHARGERS = [
     "1-4" #D
 ]
 
-
 @dataclass
 class BankData:
     temperature: float
