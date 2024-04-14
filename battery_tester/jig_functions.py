@@ -1,6 +1,6 @@
 def charge_one_battery(BTJ, bank: int, cell: int):
-   
     BTJ.set_charge_bank(BTJ, bank)
+
 
 def charge_one_bank(BTJ, bank: int):
     """
@@ -9,12 +9,14 @@ def charge_one_bank(BTJ, bank: int):
     BTJ.set_charge_bank(BTJ, bank)
     BTJ.setup(BTJ, True)
 
+
 def discharge_one_bank(BTJ, bank: int):
     """
     Discharges all batteries in one bank.
     """
     BTJ.set_charge_bank(BTJ, bank)
     BTJ.setup(BTJ, False, True)
+
 
 def output_measurements(BTJ, bank: int):
     """
@@ -28,4 +30,5 @@ def output_measurements(BTJ, bank: int):
         print(f"Voltage: {i.voltage}")
         print()
 
-#Write bankdata to CSV file.
+
+# Write bankdata to CSV file.

@@ -18,7 +18,7 @@ class ChargeMode(Enum):
     CHARGE = 0
     DISCHARGE = 1
 
-#USB path numbers look weird. Check why later.
+#Note that charger X corresponds to Battery Slot/Cell X.
 CHARGERS = [
     "1-1.4",#A
     "1-2",#B
@@ -38,6 +38,9 @@ class BatteryTestJig:
         self.u6 = u6.U6()
         self.chargers = [libb6.Device(id) for id in ids]
         """Turn off beeps.""" 
+
+        for charger in self.chargers:
+            charger.setBuzzers(False, False)
     
     def setup(self, chargeFlag = False, dischargeFlag = False):
         # preconditions: none
@@ -46,8 +49,6 @@ class BatteryTestJig:
             chargeProfile = libb6.Device.getDefaultChargeProfile(charger, libb6.BATTERY_TYPE.LIIO)
             print(chargeProfile.batteryType, chargeProfile.cellCount)
             
-            charger.setBuzzers(False, False)
-        
             if chargeFlag == True:
                 print("\nFlag == 1. Charging.\n")
                 charger.startCharging(chargeProfile)
@@ -61,6 +62,30 @@ class BatteryTestJig:
                 charger.startCharging(chargeProfile)
             else:
                 print("\nNot discharging.\n")
+    
+    def setup_one_charger(self, choice: int, chargeFlag = False, dischargeFlag = False):
+        """
+        As setup() but for only one charger, choice is charger:
+        Chargej is 0: A, 1: B, 2: C, 3: D
+        """ 
+        chosen_charger = self.chargers[choice]
+
+        chargeProfile = libb6.Device.getDefaultChargeProfile(chosen_charger, libb6.BATTERY_TYPE.LIIO) 
+        print(f"Selected Charger {choice} which charges cell {choice}.")
+
+        if chargeFlag == True:
+            print("\nFlag == 1. Charging.\n")
+            chosen_charger.startCharging(chargeProfile)
+        else:
+            print("\nFlag != 1. Not charging.\n")
+
+        if dischargeFlag == True:
+            print("\nCommencing discharge...\n")
+            breakpoint()
+            chargeProfile.mode = ChargeMode.DISCHARGE.value
+            chosen_charger.startCharging(chargeProfile)
+        else:
+            print("\nNot discharging.\n")
 
     def stop(self):
         """
@@ -96,7 +121,7 @@ class BatteryTestJig:
         resistance = resInitial * ((voltageDefault / num) - 1)
         print(f"Resistance (R) = {resistance}")
         actualTemp = 1/(1/tempRef + 1/betaValue * math.log(resistance/resInitial))
-        
+       
         return actualTemp - 273.15
     
     def get_data(self, bank: int) -> List[BankData]:
@@ -134,6 +159,10 @@ class BatteryTestJig:
             data_list.append(data)
 
         return data_list
+    
+    #Write test_script functions here, they can call other BTJ functions. 
+    def ryan(self):
+        self.get_data(3)
 
 # Scaffolding GUI for testing purposes.
 if __name__  == "__main__":
@@ -174,3 +203,11 @@ if __name__  == "__main__":
 
     time.sleep(sleepTimeChoice)
     jig.stop()
+"""
+jig = BatteryTestJig(CHARGERS)
+jig.setup_one_charger(0, False, False)
+jig.stop
+"""
+
+
+

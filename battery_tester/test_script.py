@@ -6,19 +6,33 @@ One bank at a time, measure all batteries, charge all batteries, then measure al
 
 BTJ = BatteryTestJig(CHARGERS)
 
+
+def charge_one_battery_get_data(bank: int, time: float, cell: int):
+    """
+    Select a bank, then select a charger, then charge associated cell, then output cell's data.
+    Cell is 0: A, 1: B, 2: C, 3: D
+    """
+    BTJ.set_charge_bank(bank)
+    BTJ.setup(chargeFlag=True, dischargeFlag=False)
+    time.sleep(time)
+    BTJ.get_data(bank)
+
+
 def charge_one_bank(bank: int):
     """
     Charges all batteries in one bank.
     """
     BTJ.set_charge_bank(bank)
-    BTJ.setup(chargeFlag = True, dischargeFlag = False)
+    BTJ.setup(chargeFlag=True, dischargeFlag=False)
+
 
 def discharge_one_bank(bank: int):
     """
     Discharges all batteries in one bank.
     """
     BTJ.set_charge_bank(bank)
-    BTJ.setup(chargeFlag = False, dischargeFlag = True)
+    BTJ.setup(chargeFlag=False, dischargeFlag=True)
+
 
 def output_measurements(bank: int):
     """
@@ -32,16 +46,5 @@ def output_measurements(bank: int):
         print(f"Voltage: {val.voltage}")
         print()
 
-#Write bankdata to CSV file.
 
-for x in range(1,2):
-    output_measurements(x) 
-    print()
-    print("Charging...")
-    print()
-    charge_one_bank(x)
-    print()
-    print("Charging complete.")
-    print()
-    output_measurements(x) 
-    print()
+# Write bankdata to CSV file.
