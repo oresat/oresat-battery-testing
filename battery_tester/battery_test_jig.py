@@ -246,12 +246,11 @@ if __name__  == "__main__":
     time.sleep(sleepTimeChoice)
     jig.stop()
 """
+"""
 scribe.clear_csv()
 jig = BatteryTestJig(CHARGERS)
 jig.setup_one_charger(3, False, False)
 data = jig.get_data_from_one_cell(3, 3)
 print(f"Temperature: {data.temperature}\nVoltage: {data.voltage}\n")
 jig.stop
-
-
-
+"""
