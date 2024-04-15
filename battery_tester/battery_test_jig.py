@@ -1,6 +1,7 @@
 import time
 from enum import Enum
 import math
+import data_to_csv_functions as scribe
 from dataclasses import dataclass
 from typing import List
 
@@ -66,7 +67,7 @@ class BatteryTestJig:
     def setup_one_charger(self, choice: int, chargeFlag = False, dischargeFlag = False):
         """
         As setup() but for only one charger, choice is charger:
-        Chargej is 0: A, 1: B, 2: C, 3: D
+        Charger is 0: A, 1: B, 2: C, 3: D
         """ 
         chosen_charger = self.chargers[choice]
 
@@ -160,11 +161,52 @@ class BatteryTestJig:
 
         return data_list
     
+    def get_data_from_one_cell(self, bank: int, cell: int) -> BankData:
+        """ 
+        As get_data() but for only one battery cell:
+        cell is 0: A, 1: B, 2: C, 3: D AND so is the BankData index into which we'll append data
+        """
+         
+        data_list = []
+        resolution = 0
+        gain = 0
+        settling = 0
+        voltage_measure_diff = True
+        temperature_measure_diff = False
+
+        temp_pin = TEMPERATURE_PINS[cell]
+        volt_pin = MEASURE_PINS[cell]
+
+        for pin in MEASURE_PINS: 
+            self.u6.getFeedback(u6.BitStateWrite(pin, False))
+        self.u6.getFeedback(u6.BitStateWrite(MEASURE_PINS[bank], True))
+        time.sleep(1)
+
+        avgTemps = 0.0 
+        for x in range(10):
+            avgTemps += self.u6.getAIN(temp_pin, resolution, gain, settling, temperature_measure_diff)
+            time.sleep(0.01)
+        avgTemps = avgTemps / 10
+        actualTemp = self.get_actual_temp(avgTemps)
+
+        avgVolts = 0.0
+        for x in range(10):
+            avgVolts += self.u6.getAIN(volt_pin, resolution, gain, settling, voltage_measure_diff)
+            time.sleep(0.01)
+        avgVolts = avgVolts / 10
+        
+        data = BankData(actualTemp, avgVolts)
+        timestamp = scribe.stamper()
+        scribe.write_to_csv(timestamp, bank, cell, data.temperature, data.voltage)
+
+        return data
+    
     #Write test_script functions here, they can call other BTJ functions. 
     def ryan(self):
         self.get_data(3)
 
 # Scaffolding GUI for testing purposes.
+"""
 if __name__  == "__main__":
     dischargeFlag = 0
     chargeFlag = int(input("Do you want to begin charging batteries?\n0: No.\n1: Yes\nInput: "))
@@ -204,10 +246,12 @@ if __name__  == "__main__":
     time.sleep(sleepTimeChoice)
     jig.stop()
 """
+scribe.clear_csv()
 jig = BatteryTestJig(CHARGERS)
-jig.setup_one_charger(0, False, False)
+jig.setup_one_charger(3, False, False)
+data = jig.get_data_from_one_cell(3, 3)
+print(f"Temperature: {data.temperature}\nVoltage: {data.voltage}\n")
 jig.stop
-"""
 
 
 
