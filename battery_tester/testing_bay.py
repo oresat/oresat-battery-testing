@@ -16,7 +16,7 @@ def full_test_one_battery(bank: int, cell: int):
         Loop breaks once the battery reaches 4.2V.
         """ 
         data = BTJ.get_data_from_one_cell(bank, cell)
-        if data.voltage >= 4.2:
+        if data.voltage >= 4.0:
             BTJ.stop()
             print("Charge complete.\n")
             break

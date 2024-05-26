@@ -38,7 +38,11 @@ class BatteryTestJig:
         # preconditions : ids must be valid usb paths, tested in libb6
         # postconditions: 
         self.u6 = u6.U6()
-        self.chargers = [libb6.Device(id) for id in ids]
+        #self.chargers = [libb6.Device(id) for id in ids]
+        self.chargers = []
+        for id in ids:
+            print(id)
+            self.chargers.append(libb6.Device(id))
         """Turn off beeps.""" 
 
         for charger in self.chargers:
