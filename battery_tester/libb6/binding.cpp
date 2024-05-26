@@ -13,7 +13,7 @@ namespace py = pybind11;
 
 PYBIND11_MODULE(libb6, m) {
 	m.doc() = "PyBind11 libb6 plugin";//docstring
-
+    
 	//Binding from Enum.hh
 	py::enum_<b6::BATTERY_TYPE>(m, "BATTERY_TYPE", py::arithmetic())	
 		.value("LIPO", b6::BATTERY_TYPE::LIPO)
@@ -61,6 +61,10 @@ PYBIND11_MODULE(libb6, m) {
 
 	py::class_<b6::ChargeProfile>(m, "ChargeProfile")
 		.def(py::init<>())
+        //Given we only need to access the li field of the union, why not make it a struct?
+        py::class_<b6::ChargeProfile::mode>(m, "mode")
+            .def(py::init<>())
+            .def_readwrite("li", & b6::ChargeProfile::li)
 		.def_readwrite("batteryType", & b6::ChargeProfile::batteryType)
 		.def_readwrite("cellCount", & b6::ChargeProfile::cellCount)
 		.def_readwrite("rPeakCount", & b6::ChargeProfile::rPeakCount)

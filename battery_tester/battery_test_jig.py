@@ -34,6 +34,7 @@ class BankData:
 
 class BatteryTestJig:
     def __init__(self, ids: List[str]):
+        print(f'{ids=}')
         # preconditions : ids must be valid usb paths, tested in libb6
         # postconditions: 
         self.u6 = u6.U6()
@@ -42,10 +43,12 @@ class BatteryTestJig:
 
         for charger in self.chargers:
             charger.setBuzzers(False, False)
+        print("\n\n\nINIT COMPLETE\n\n\n")
     
     def setup(self, chargeFlag = False, dischargeFlag = False):
         # preconditions: none
         # postconditions: 
+        print(f'{chargeFlag=} {dischargeFlag=}')
         for charger in self.chargers:
             chargeProfile = libb6.Device.getDefaultChargeProfile(charger, libb6.BATTERY_TYPE.LIIO)
             print(chargeProfile.batteryType, chargeProfile.cellCount)
@@ -65,6 +68,8 @@ class BatteryTestJig:
                 print("\nNot discharging.\n")
     
     def setup_one_charger(self, choice: int, chargeFlag = False, dischargeFlag = False):
+        
+        print(f'{chargeFlag=} {dischargeFlag=}')
         """
         As setup() but for only one charger, choice is charger:
         Charger is 0: A, 1: B, 2: C, 3: D
@@ -97,6 +102,7 @@ class BatteryTestJig:
 
         for pin in MEASURE_PINS:
             self.u6.setDOState(pin, 0)
+        print("\nSTOPPED.\n")
 
     def set_charge_bank(self, bank: int):
         """
@@ -120,7 +126,6 @@ class BatteryTestJig:
         kelvinToCelsius = 273.15
 
         resistance = resInitial * ((voltageDefault / num) - 1)
-        print(f"Resistance (R) = {resistance}")
         actualTemp = 1/(1/tempRef + 1/betaValue * math.log(resistance/resInitial))
        
         return actualTemp - 273.15
@@ -206,7 +211,6 @@ class BatteryTestJig:
         self.get_data(3)
 
 # Scaffolding GUI for testing purposes.
-"""
 if __name__  == "__main__":
     dischargeFlag = 0
     chargeFlag = int(input("Do you want to begin charging batteries?\n0: No.\n1: Yes\nInput: "))
@@ -246,7 +250,6 @@ if __name__  == "__main__":
     time.sleep(sleepTimeChoice)
     jig.stop()
 """
-"""
 scribe.clear_csv()
 jig = BatteryTestJig(CHARGERS)
 jig.setup_one_charger(3, False, False)
@@ -254,3 +257,4 @@ data = jig.get_data_from_one_cell(3, 3)
 print(f"Temperature: {data.temperature}\nVoltage: {data.voltage}\n")
 jig.stop
 """
+
