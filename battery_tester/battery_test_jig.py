@@ -65,7 +65,6 @@ class BatteryTestJig:
 
             if dischargeFlag == True:
                 print("\nCommencing discharge...\n")
-                breakpoint()
                 chargeProfile.mode = ChargeMode.DISCHARGE.value
                 charger.startCharging(chargeProfile)
             else:
@@ -91,7 +90,6 @@ class BatteryTestJig:
 
         if dischargeFlag == True:
             print("\nCommencing discharge...\n")
-            breakpoint()
             chargeProfile.mode = ChargeMode.DISCHARGE.value
             chosen_charger.startCharging(chargeProfile)
         else:
@@ -212,7 +210,7 @@ class BatteryTestJig:
     
     #Write test_script functions here, they can call other BTJ functions. 
     def ryan(self):
-        self.get_data(3)
+        print("\nHello!\n")
 
 # Scaffolding GUI for testing purposes.
 if __name__  == "__main__":

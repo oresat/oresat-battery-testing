@@ -44,19 +44,12 @@ namespace b6 {
   struct ChargeProfile {
     BATTERY_TYPE batteryType;
     uint8_t cellCount, rPeakCount, cycleType, cycleCount;
-    /* Testing with this as struct since li is only thing accessed and can't bind unions easily */
+
     union {
       CHARGING_MODE_LI li;
       CHARGING_MODE_NI ni;
       CHARGING_MODE_PB pb;
     } mode;
-/*
-    struct {
-      CHARGING_MODE_LI li;
-      //CHARGING_MODE_NI ni;
-      //CHARGING_MODE_PB pb;
-    } mode;
-    */
 
     uint16_t chargeCurrent, dischargeCurrent, cellDischargeVoltage, endVoltage, trickleCurrent;
   };
