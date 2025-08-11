@@ -13,6 +13,7 @@ V1.0 of the PCB layout:
 ### Setup
 - Clone oresat-battery-testing.
 - Install dependencies: `$ sudo apt install libusb-1.0-0-dev pkg-config python3-dev`
+- Install pyusb: "pip install pyusb" or if that doesn't work, use "pip install pyusb --break-system-packages"
 - Build Python extension for libb6: `$ make -C libraries`
 
 ### Udev Setup
