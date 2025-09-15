@@ -56,3 +56,5 @@ assert labjack_endpoint is not None
 
 #Send a message to the labjack.
 labjack_endpoint.write("Hello, Labjack! We come in peace!")
+
+
