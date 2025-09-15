@@ -7,7 +7,7 @@ import usb.util
 import sys
 
 #
-#You might be confusing the front end and the back end. Remember, labjack likes it from ... nvm
+#You might be confusing the front end and the back end.
 #try_usb is meant to replace libb6
 #Error u6 not detected - might need to install it(?)
 #
