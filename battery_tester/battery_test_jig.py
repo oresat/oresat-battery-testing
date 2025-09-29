@@ -35,19 +35,21 @@ class BankData:
 class BatteryTestJig:
     def __init__(self, ids: List[str]):
         print(f'{ids=}')
-        # preconditions : ids must be valid usb paths, tested in libb6
-        # postconditions: 
         self.u6 = u6.U6()
         #self.chargers = [libb6.Device(id) for id in ids]
         self.chargers = []
+        ## WE ARE GOING TO ASSUME THAT WE JUST START WITH THE CORRECT USB SERIAL PATHS
         for id in ids:
-            print(id)
-            self.chargers.append(libb6.Device(id))
-        """Turn off beeps.""" 
+          print(id)
+          self.chargers.append(id)
+        #for id in ids:
+        #    print(id)
+        #    self.chargers.append(libb6.Device(id))
 
-        for charger in self.chargers:
-            charger.setBuzzers(False, False)
-        print("\n\n\nINIT COMPLETE\n\n\n")
+        #Turns off beeps: 
+        #for charger in self.chargers:
+        #    charger.setBuzzers(False, False)
+        #print("\n\n\nINIT COMPLETE\n\n\n")
     
     def setup(self, chargeFlag = False, dischargeFlag = False):
         # preconditions: none
