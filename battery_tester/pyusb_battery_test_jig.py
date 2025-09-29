@@ -6,12 +6,6 @@ import usb.core
 import usb.util
 import sys
 
-#
-#You might be confusing the front end and the back end.
-#try_usb is meant to replace libb6
-#Error u6 not detected - might need to install it(?)
-#
-
 #Index is the bank ID
 MEASURE_PINS = [0, 2, 4, 6]
 TEMPERATURE_PINS = [8, 9, 10, 11]
@@ -35,7 +29,7 @@ CHARGERS = [
 
 class BatteryTester:
 
-  def __init__(self, ids: List[str]):
+  def __init__(self, ids: list[str]):
     print(f'{ids=}')
     # preconditions : ids must be valid usb paths, tested in libb6
     # postconditions: 
@@ -43,17 +37,37 @@ class BatteryTester:
     #self.chargers = [libb6.Device(id) for id in ids]
     self.chargers = []
     for id in ids:
-        print(id)
-        self.chargers.append(libb6.Device(id))
-    """Turn off beeps.""" 
+      print(id)
+      self.chargers.append(id)#This assumes that we automatically found the correct
+                              #serial paths - it does not call the custom constructor
 
+  def setup(self, chargeFlag = False, dischargeFlag = False):
+    print(f'{chargeFlag=} {dischargeFlag=}')
     for charger in self.chargers:
-        charger.setBuzzers(False, False)
-    print("\n\n\nINIT COMPLETE\n\n\n")
+      #How to write this in Python
+      chargeProfile = libb6.Device.getDefaultChargeProfile(charger, libb6.BATTERY_TYPE.LIIO)
+      print(chargeProfile.batteryType, chargeProfile.cellCount)
+      
+      if chargeFlag == True:
+          print("\nFlag == 1. Charging.\n")
+          charger.startCharging(chargeProfile)
+      else:
+          print("\nFlag != 1. Not charging.\n")
+
+      if dischargeFlag == True:
+          print("\nCommencing discharge...\n")
+          chargeProfile.mode = ChargeMode.DISCHARGE.value
+          charger.startCharging(chargeProfile)
+      else:
+          print("\nNot discharging.\n")
 
   def stop(self):
     for pin in CHARGE_BANK_PINS:
       self.u6.setDOState(pin, 0)
     for pin in MEASURE_PINS:
-      self.u6.setDOState(pint, 0)
+      self.u6.setDOState(pin, 0)
     print("\nSTOPPED\n")
+
+BTJ = BatteryTester(CHARGERS)
+BTJ.setup(True, False)
+BTJ.stop()

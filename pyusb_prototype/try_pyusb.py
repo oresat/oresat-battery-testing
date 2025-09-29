@@ -1,6 +1,14 @@
 import usb.core
 import usb.util
 import sys
+import u6
+
+"""
+PyUSB is mostly to talk to chargers. LabJack functions through u6. LabJack doesn't need pyusb.
+In other words, just use u6.function() to talk to LabJack. Write PyUSB to replace libb6 and talk
+to the chargers.
+
+"""
 
 """__USB Hierarchy__
 Device: The hardware device plugged in with a USB cable. A software object representing it.
@@ -52,9 +60,10 @@ def find_out_endpoint(device):
 labjack_endpoint = usb.util.find_descriptor(labjack_interface, custom_match = 
                                             find_out_endpoint(labjack_interface))
 """
-assert labjack_endpoint is not None
 
 #Send a message to the labjack.
-labjack_endpoint.write("Hello, Labjack! We come in peace!")
+if labjack_endpoint is not None:
+  labjack_endpoint.write("Hello, Labjack! We come in peace!")
+else print("The endpoint is null.")
 
 
