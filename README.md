@@ -9,12 +9,26 @@ V1.0 of the PCB layout:
 ![The PCB layout V1.0](https://github.com/oresat/oresat-battery-testing/raw/master/pcd-layout.png)
 
 ### Software
-
 ### Setup
 - Clone oresat-battery-testing.
 - Install dependencies: `$ sudo apt install libusb-1.0-0-dev pkg-config python3-dev`
 - Install pyusb: "pip install pyusb" or if that doesn't work, use "pip install pyusb --break-system-packages"
 - Build Python extension for libb6: `$ make -C libraries`
+
+### More Dependencies
+To get u6 to work (import u6) you must install the labjack-ljm python library which is different from the labjack-ljm package
+
+sudo pip install labjack-ljm --break-system-packages 
+The above line installed labjack-ljm
+
+You need to install Exodriver in order for u6 to work
+
+git clone https://github.com/labjack/exodriver.git
+cd exodriver
+sudo ./install.sh
+
+You will also need LabJackPython:
+sudo pip install LabJackPython --break-system-packages
 
 ### Udev Setup
 Copy the .rules files (from the Battery Tester folder) into the folder on your computer which contains rules files for udev.
