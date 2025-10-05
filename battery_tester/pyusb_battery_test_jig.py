@@ -1,5 +1,7 @@
 import u6
 
+from chargers_backend import ChargeProfile
+
 from dataclasses import dataclass
 from enum import Enum
 import usb.core
@@ -44,13 +46,12 @@ class BatteryTester:
   def setup(self, chargeFlag = False, dischargeFlag = False):
     print(f'{chargeFlag=} {dischargeFlag=}')
     for charger in self.chargers:
-      #How to write this in Python
-      chargeProfile = libb6.Device.getDefaultChargeProfile(charger, libb6.BATTERY_TYPE.LIIO)
-      print(chargeProfile.batteryType, chargeProfile.cellCount)
-      
+      charge_profile = ChargeProfile
+      print(charge_profile.battery_type, charge_profile.cell_count)
+      #Add start_charging function to chargers_backend 
       if chargeFlag == True:
           print("\nFlag == 1. Charging.\n")
-          charger.startCharging(chargeProfile)
+k         charger.startCharging(chargeProfile)
       else:
           print("\nFlag != 1. Not charging.\n")
 
