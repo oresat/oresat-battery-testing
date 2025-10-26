@@ -51,3 +51,31 @@ If you get an import error about libb6:
 
 ### Battery Cells
 In each bank are four battery slots. The battery slot on each bank that is closest to the LabJack is slot D, then up from there is C, B, and A. Each battery slot corresponds to the charger of the same designation. If Battery A (on whichever battery bank currently selected) is not charging, something may be wrong with Charger A, for instance.
+
+### Battery_Tester Design
+__chargers_backend.py__
+In the battery chargers section, does not deal with labjack at all.
+Jobs:
+A) Hold the data required for charging batteries: ChargeProfile, Charger Serial Paths
+B) Hold the functions required for charging batteries: start_charging(), stop_charging(), define_charger_serial_paths()
+
+__labjack_backend.py__
+In the labjack battery data-getting section, does not interact with chargers at all.
+Jobs:
+A) Hold data required for labjack commands: PINS,
+	i. Have notes about each of the functions (or at least a mention) of the functions we're using such as getAIN()
+B) Hold dataclass for collecting temperature and voltage data: class BankData
+C) Hold calculation/conversion functions for getting temps and volts: get_actual_temp(), get_data()
+D) A general STOP() function for the labjack
+
+__scribe_backend.py__
+In the labjack battery data-getting section, does not interact with anything.
+Jobs:
+A) Hold functions for writing to csv file, including timestamps.
+
+__main.py__ (or something similar)
+This is the general frontend that combines all parts and holds a class with functions to charge, discharge, test, etc.
+A) Select a battery bank/battery and do any or all of the following:
+	i. Charge.
+	ii. Discharge.
+	iii. Get voltage and temperature. Write to csv with timestamp.
