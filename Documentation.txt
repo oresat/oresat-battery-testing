@@ -1,0 +1,46 @@
+______
+chargers_backend.py
+In the battery chargers section, does not deal with labjack at all. 
+Jobs:
+A) Hold the data required for charging batteries: ChargeProfile, Charger Serial Paths
+B) Hold the functions required for charging batteries: start_charging(), stop_charging(), define_charger_serial_paths()
+Issues: Likely SOLVED--> libb6 did stuff for us -  it's possible that we need a set_ChargeProfile() function since we have it in the original code, but given that we already know we're using lithium ions only I think we can get away with having the ChargeProfile generally behave like a constant since there is only one --> so instead of that line "chargeProfile = libb6.Device.getDefaultChargeProfile()" we can literally just say this_battery_charge_profile = ChargeProfile where ChargeProfile is the dataclass that holds said values
+[!!!]What is the command to actually start the charger charging?
+---Might need a "stop_charging()" function
+Don't worry about UNK1 for now, just send it and don't worry too much about checking packet size.
+
+Viable Commands to send to the chargers: https://github.com/maciek134/libb6/blob/master/Enum.hh
+From an enum class:
+    GET_DEV_INFO = 0x57,
+    GET_SYS_INFO = 0x5a,
+    GET_CHARGE_INFO = 0x55,
+    UNK1 = 0x5f [Theoretically this starts the chargers.]
+    STOP_CHARGING  = 0xfe,
+  
+_____WRITTEN BUT NOT TESTED
+labjack_backend.py 
+In the labjack battery data-getting section, does not interact with chargers at all.
+Jobs:
+A) Hold data required for labjack commands: PINS
+	i. Have notes about each of the functions (or at least a mention) of the functions we're using such as getAIN()
+B) Hold dataclass for collecting temperature and voltage data: class BankData
+C) Hold calculation/conversion functions for getting temps and volts: get_actual_temp(), get_data()
+D) A general STOP() function for the labjackj
+
+_____ COMPLETE!
+scribe_backend.py
+In the labjack battery data-getting section, does not interact with anything.
+Jobs:
+A) Hold functions for writing to csv file, including timestamps.
+
+_____
+main.py (or something similar)
+This is the general frontend that combines all parts and holds a class with functions to charge, discharge, test, etc.
+A) Select a battery bank/battery and do any or all of the following:
+	i. Charge.
+	ii. Discharge.
+	iii. Get voltage and temperature. Write to csv with timestamp.
+	
+_____
+Thereafter, anyone should be able to easily write any number of testing scripts to fulfill NASA requirements.
+The ideal scenario is that this is in a good enough state that anyone can take it and run with it.
