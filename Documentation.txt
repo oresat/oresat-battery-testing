@@ -14,7 +14,7 @@ From an enum class:
     GET_DEV_INFO = 0x57,
     GET_SYS_INFO = 0x5a,
     GET_CHARGE_INFO = 0x55,
-    UNK1 = 0x5f [Theoretically this starts the chargers.]
+    UNK1 = 0x5f [Checks packet size...]
     STOP_CHARGING  = 0xfe,
   
 _____WRITTEN BUT NOT TESTED
