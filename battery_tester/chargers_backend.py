@@ -1,8 +1,7 @@
-#Include things like ChargingProfile (a dataclass makes sense for this)
-#You will need a number of features from Device.hh/cc to work for you - you can write them
-  #in Python pretty easily. Then use em in conjunction with either pyusb->chargers or 
-                                                                  #u6->labjack
-  #You basically have two somewhat separate control tracks
+from enum import Enum, unique
+import usb.core
+import usb.util
+import sys
 """
   /**
    * Custom constructor that takes in a port number and then checks each device
@@ -65,7 +64,7 @@ class ChargerSerialPaths:
   C = str(0)
   D = str(0)
   #Give this function the correct serial ports for the chargers that you find manually.
-  def __init__(self):
+  #def __init__(self):
     
   """
     while True:

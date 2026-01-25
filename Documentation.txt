@@ -1,4 +1,3 @@
-______
 chargers_backend.py
 In the battery chargers section, does not deal with labjack at all. 
 Jobs:
@@ -21,11 +20,13 @@ _____WRITTEN BUT NOT TESTED
 labjack_backend.py 
 In the labjack battery data-getting section, does not interact with chargers at all.
 Jobs:
-A) Hold data required for labjack commands: PINS
-	i. Have notes about each of the functions (or at least a mention) of the functions we're using such as getAIN()
-B) Hold dataclass for collecting temperature and voltage data: class BankData
-C) Hold calculation/conversion functions for getting temps and volts: get_actual_temp(), get_data()
-D) A general STOP() function for the labjackj
+A) Hold data required for labjack commands: PINS (DONE)
+	i. Have notes about each of the functions (or at least a mention) of the functions we're using such as getAIN() (EH)
+B) Hold dataclass for collecting temperature and voltage data: class BankData (DONE)
+C) Hold calculation/conversion functions for getting temps and volts: get_actual_temp(), get_data() (DONE)
+D) A general STOP() function for the labjack (DONE)
+----NOTE: Not sure where to put this yet but the scribe function that appends to the csv file should take the output of the
+get_data_from_one_cell function as its input DONE
 
 _____ COMPLETE!
 scribe_backend.py
