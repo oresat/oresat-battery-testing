@@ -1,8 +1,12 @@
 from enum import Enum
 import math
 from dataclasses import dataclass
-from scribe_backend import write_to_csv
-import u6
+#from scribe_backend import write_to_csv
+import scribe_backend as scribe
+import u6 as u6module
+import time
+
+u6 = u6module.U6()#u6 is the name for the device
 
 #Labjack Command Pins
 MEASURE_PINS = [0, 2, 4, 6]
@@ -38,7 +42,9 @@ def get_actual_temp(num) -> float:
   kelvinToCelsius = 273.15
 
   resistance = resInitial * ((voltageDefault / num) - 1)
-  actualTemp = 1/(1/tempRef + 1/betaValue * math.log(resistance/resInitial))
+  #print(f"RESISTANCE = {resistance}\n")
+  logarithm = math.log(resistance/resInitial)
+  actualTemp = 1/((1/tempRef) + ((1/betaValue) * logarithm))
  
   return actualTemp - 273.15
 
@@ -54,18 +60,18 @@ def get_data_from_one_cell(mp: MeasureProfile, bank: int, cell: int) -> BankData
  
   #Ensure all banks are unselected
   for pin in MEASURE_PINS:
-    u6.getFeedback(u6.BitStateWrite(pin, False))
+    u6.getFeedback(u6module.BitStateWrite(pin, False))
 
   #Set the bank we actually want to measure
-  u6.getFeedback(u6.BitStateWrite(MEASURE_PINS[bank], True))
+  u6.getFeedback(u6module.BitStateWrite(MEASURE_PINS[bank], True))
   time.sleep(1) #??
  
   ###TEMPERATURE SECTION
   temp_total = float(0)
 
   for data_point in range(10):
-    temp_total += u6.get
-    avgTemps += u6.getAIN(mp.temp_pin, mp.resolution, mp.gain, mp.settling, mp.temp_measure_diff)
+    temp_total += u6.getAIN(temp_pin, mp.resolution, mp.gain, mp.settling, mp.temp_measure_diff)
+    #print(f"TEMP TOTAL VALUE WHICH WILL INCREASE OVER TIME IS {temp_total}")
     time.sleep(0.01)
  
   #Get the temperature.
@@ -75,7 +81,7 @@ def get_data_from_one_cell(mp: MeasureProfile, bank: int, cell: int) -> BankData
   volts_total = float(0)
 
   for data_point in range(10):
-    volts_total += u6.getAIN(volt_pin, mp.resolution, mp.again, mp.settling, mp.voltage_measure_diff)
+    volts_total += u6.getAIN(volt_pin, mp.resolution, mp.gain, mp.settling, mp.voltage_measure_diff)
     time.sleep(0.01)
 
   cell_voltage = volts_total / 10
