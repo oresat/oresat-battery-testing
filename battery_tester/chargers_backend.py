@@ -19,7 +19,7 @@ import sys
     uint8_t loc_path[8]; // the device we want
 
     // Put string nums into path array.
-    while (location[loc_i]) {                                                                        
+    while (location[loc_i]) {
       if (location[loc_i] != '.' && location[loc_i] != '-') {
         int to_add = location[loc_i] - '0';
         loc_path[path_i] = to_add;
@@ -33,45 +33,48 @@ import sys
 
 from dataclasses import dataclass
 
-#Kosher commands to write to the chargers, taken from Libb6 Enum.hh
+# Kosher commands to write to the chargers, taken from Libb6 Enum.hh
 @unique
 class Command(Enum):
-  GET_DEV_INFO = 0x57,
-  GET_SYS_INFO = 0x5A,
-  GET_CHARGE_INFO = 0x55,
-  UNK1 = 0x5F,
-  STOP_CHARGING = 0xFE
+    GET_DEV_INFO = 0x57,
+    GET_SYS_INFO = 0x5A,
+    GET_CHARGE_INFO = 0x55,
+    UNK1 = 0x5F,
+    STOP_CHARGING = 0xFE
 
-#Lithium ion batteries only. Values copied from Device.cc in /archive/libb6
+# Lithium ion batteries only. Values copied from Device.cc in /archive/libb6
 @dataclass
 class ChargeProfile:
-  battery_type = "lithium_ion"
-  cell_count = 1
-  r_peak_count = 3
-  cycle_type = 1
-  cycle_count = 1
-  charge_current = 1500
-  discharge_current = 1000
-  trickle_current = 0
-  cell_discharge_voltage = 3200
-  end_voltage = 4200
+    battery_type = "lithium_ion"
+    cell_count = 1
+    r_peak_count = 3
+    cycle_type = 1
+    cycle_count = 1
+    charge_current = 1500
+    discharge_current = 1000
+    trickle_current = 0
+    cell_discharge_voltage = 3200
+    end_voltage = 4200
 
-#This is how we access the chargers. These need to be filled each time by finding the 
-#correct paths. These are the correct paths when plugged into the USB port on my computer right.
+# This is how we access the chargers. These need to be filled each time by finding the
+# correct paths. These are the correct paths when plugged into the USB port on my computer right.
+
+
 @dataclass
 class ChargerSerialPaths:
-  A = str("1-1.1.4")
-  B = str("1-1.1.2")
-  C = str("1-1.1.3")
-  D = str("1-1.4")
-  #Give this function the correct serial ports for the chargers that you find manually.
-  def __init__(self, paths: list[str]):
-      print(f'{paths}')
-      self.A = paths[0]
-      self.B = paths[1]
-      self.C = paths[2]
-      self.D = paths[3]
-  """
+    A = str("1-1.1.4")
+    B = str("1-1.1.2")
+    C = str("1-1.1.3")
+    D = str("1-1.4")
+    # Give this function the correct serial ports for the chargers that you find manually.
+
+    def __init__(self, paths: list[str]):
+        print(f'{paths}')
+        self.A = paths[0]
+        self.B = paths[1]
+        self.C = paths[2]
+        self.D = paths[3]
+    """
     while True:
       for x in range(4):
         charger = str(input("\nEnter the serial port exactly for charger: "))
@@ -79,7 +82,8 @@ class ChargerSerialPaths:
         if flag == 'y' or flag == 'Y':
           self.A = charger
           break
-    print(f"Charger A:\n{self.A}\nCharger B:\n{self.B}\nCharger C:\n{self.C}\nCharger D:\n{self.D}")
+    print(f"Charger A:\n{self.A}\nCharger B:\n{
+          self.B}\nCharger C:\n{self.C}\nCharger D:\n{self.D}")
 
     flag = input((f"Does this look correct? Y/n: "))
     if flag == 'y' or flag == 'Y':
@@ -87,52 +91,59 @@ class ChargerSerialPaths:
   """
 
 
-#Note that this merely tells the chargers to "do something". By default they will charge.
-#To discharge, you will still call this function but you will first set the chargemode to discharge.
+# Note that this merely tells the chargers to "do something". By default they will charge.
+# To discharge, you will still call this function but you will first set the chargemode to discharge.
 def start_charging(profile: ChargeProfile) -> bool:
-  #This is where pyusb comes into play
-  #Realizing that we run into the same problem, no matter what we need to identify which device
-  #Once we do that, then we can call this function --> this function should probably
-  #be in a class with everything else, but hold that thought
-  #Let's assume that we have already located the correct charger device
+    # This is where pyusb comes into play
+    # Realizing that we run into the same problem, no matter what we need to identify which device
+    # Once we do that, then we can call this function --> this function should probably
+    # be in a class with everything else, but hold that thought
+    # Let's assume that we have already located the correct charger device
 
-  #ids are placeholders
-  charger1 = usb.core.find(idVendor = 0x0000, idProduct = 0x0000)
-  
-  if charger1 is None:
-    raise ValueError("Charger 1 not found!")
-  
-  charger1.set_configuration()#Assumes that there is only 1
+    # ids are placeholders
+    charger1 = usb.core.find(idVendor=0x0000, idProduct=0x0000)
+    """
+    devices = usb.core.find(find_all=True)
+    for dev in devices:
+        # Format: bus-port1.port2.port3...
+        path = f"{dev.bus}-{'.'.join(map(str, dev.port_numbers))}"
+    if path == "1-1.1.4":
+        print("Found device:", dev)
+    """
+    if charger1 is None:
+        raise ValueError("Charger 1 not found!")
 
-  charger1_config = charger1.get_active_configuration()
+    charger1.set_configuration()  # Assumes that there is only 1
 
-  charger1_interface = charger1_config[(0,0)] 
+    charger1_config = charger1.get_active_configuration()
 
-  charger1_endpoint = usb.util.find_descriptor(charger1_interface, custom_match = lambda endp:
-                                            usb.util.endpoint_direction(endp.bEndpointAddress)
-                                            == usb.util.ENDPOINT_OUT)
+    charger1_interface = charger1_config[(0, 0)]
 
-  #UNK1 appears to be a test where if it is 4, we must stop charging. It is checking if the data
-  #is 4 bytes would be my guess
-  if charger1_endpoint is not None:
-    charger1_endpoint.write(Command.UNK1) #For now, we're gonna assume that the charger
-                                          #corrects for this, we'll test later
-    #if (buffer is at 4 (uint8s) so if buffer is at one byte then stop charging)
-    #stop charging under certain conditions, might be a safety check
-    charger1_endpoint.write(ChargeProfile.battery_type)#might not work if charger needs specific
-                                                       #data type, we'll see
-    charger1_endpoint.write(ChargeProfile.cell_count)
-    #Not sure what mode is - except that it is tied to battery type, but we only have one type
-    charger1_endpoint.write(ChargeProfile.battery_type)
-    charger1_endpoint.write(ChargeProfile.charge_current)
-    charger1_endpoint.write(ChargeProfile.discharge_current)
-    charger1_endpoint.write(ChargeProfile.cell_discharge_voltage)
-    charger1_endpoint.write(ChargeProfile.end_voltage)
-    charger1_endpoint.write(ChargeProfile.trickle_current)
-    #UA? Checksum? See below.
-    charger1_endpoint.write([0,0,0,0])#Figure out what this is for, UA
-  else:
-    print("The endpoint is null. Something might be disconnected.")
+    charger1_endpoint = usb.util.find_descriptor(charger1_interface, custom_match=lambda endp:
+        usb.util.endpoint_direction(endp.bEndpointAddress) == usb.util.ENDPOINT_OUT)
+
+    # UNK1 appears to be a test where if it is 4, we must stop charging. It is checking if the data
+    # is 4 bytes would be my guess
+    if charger1_endpoint is not None:
+        charger1_endpoint.write(Command.UNK1)  # For now, we're gonna assume that the charger
+                                               # corrects for this, we'll test later
+        # if (buffer is at 4 (uint8s) so if buffer is at one byte then stop charging)
+        # stop charging under certain conditions, might be a safety check
+        # might not work if charger needs specific
+        charger1_endpoint.write(ChargeProfile.battery_type)  # data type, we'll see
+        charger1_endpoint.write(ChargeProfile.cell_count)
+        # Not sure what mode is - except that it is tied to battery type, but we only have one type
+        charger1_endpoint.write(ChargeProfile.battery_type)
+        charger1_endpoint.write(ChargeProfile.charge_current)
+        charger1_endpoint.write(ChargeProfile.discharge_current)
+        charger1_endpoint.write(ChargeProfile.cell_discharge_voltage)
+        charger1_endpoint.write(ChargeProfile.end_voltage)
+        charger1_endpoint.write(ChargeProfile.trickle_current)
+        # UA? Checksum? See below.
+        charger1_endpoint.write([0, 0, 0, 0])  # Figure out what this is for, UA
+    else:
+        print("The endpoint is null. Something might be disconnected.")
+
 
 """
 C Code reference
