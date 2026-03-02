@@ -16,7 +16,7 @@ From an enum class:
     UNK1 = 0x5f [Checks packet size...]
     STOP_CHARGING  = 0xfe,
   
-_____WRITTEN BUT NOT TESTED
+_____TESTED, SHOULD BE GOOD
 labjack_backend.py 
 In the labjack battery data-getting section, does not interact with chargers at all.
 Jobs:

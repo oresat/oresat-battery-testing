@@ -56,16 +56,21 @@ class ChargeProfile:
   cell_discharge_voltage = 3200
   end_voltage = 4200
 
-#This is how we access the chargers. These need to be filled each time by finding the correct paths.
+#This is how we access the chargers. These need to be filled each time by finding the 
+#correct paths. These are the correct paths when plugged into the USB port on my computer right.
 @dataclass
 class ChargerSerialPaths:
-  A = str(0)
-  B = str(0)
-  C = str(0)
-  D = str(0)
+  A = str("1-1.1.4")
+  B = str("1-1.1.2")
+  C = str("1-1.1.3")
+  D = str("1-1.4")
   #Give this function the correct serial ports for the chargers that you find manually.
-  #def __init__(self):
-    
+  def __init__(self, paths: list[str]):
+      print(f'{paths}')
+      self.A = paths[0]
+      self.B = paths[1]
+      self.C = paths[2]
+      self.D = paths[3]
   """
     while True:
       for x in range(4):
