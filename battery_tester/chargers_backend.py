@@ -67,13 +67,21 @@ class ChargerSerialPaths:
     C = str("1-1.1.3")
     D = str("1-1.4")
     # Give this function the correct serial ports for the chargers that you find manually.
-
+    """
     def __init__(self, paths: list[str]):
         print(f'{paths}')
         self.A = paths[0]
         self.B = paths[1]
         self.C = paths[2]
         self.D = paths[3]
+        
+
+    def convert_from_string(self, paths: list[str]):
+
+
+    def path_to_tuple(path):
+        return tuple(int(x) for x in path.split("-")[1].split("."))
+    """
     """
     while True:
       for x in range(4):
@@ -93,7 +101,8 @@ class ChargerSerialPaths:
 
 # Note that this merely tells the chargers to "do something". By default they will charge.
 # To discharge, you will still call this function but you will first set the chargemode to discharge.
-def start_charging(profile: ChargeProfile) -> bool:
+########Use lambda to iterate through chargers and find the right path that is entered by user
+def start_charging(profile: ChargeProfile) -> bool:#Manually know which charger you are calling
     # This is where pyusb comes into play
     # Realizing that we run into the same problem, no matter what we need to identify which device
     # Once we do that, then we can call this function --> this function should probably
