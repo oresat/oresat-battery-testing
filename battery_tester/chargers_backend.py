@@ -98,11 +98,13 @@ class ChargerSerialPaths:
       break
   """
 
+def path_to_tuple(path: str):
+    return tuple(int(x) for x in path.split("-")[1].split("."))
 
 # Note that this merely tells the chargers to "do something". By default they will charge.
 # To discharge, you will still call this function but you will first set the chargemode to discharge.
 ########Use lambda to iterate through chargers and find the right path that is entered by user
-def start_charging(profile: ChargeProfile) -> bool:#Manually know which charger you are calling
+def start_charging(profile: ChargeProfile, CH1: str) -> bool:#Manually know which charger you are calling
     # This is where pyusb comes into play
     # Realizing that we run into the same problem, no matter what we need to identify which device
     # Once we do that, then we can call this function --> this function should probably
@@ -110,7 +112,11 @@ def start_charging(profile: ChargeProfile) -> bool:#Manually know which charger 
     # Let's assume that we have already located the correct charger device
 
     # ids are placeholders
-    charger1 = usb.core.find(idVendor=0x0000, idProduct=0x0000)
+    charger1 = usb.core.find(custom_match=lambda d: d.port_numbers == path_to_tuple(CH1))
+    #Make sure that usb is not being used for something else
+    if dev.is_kernel_driver_active(0):
+        dev.detach_kernel_driver(0)
+    print(f"charger1 path is {charger1}")
     """
     devices = usb.core.find(find_all=True)
     for dev in devices:
