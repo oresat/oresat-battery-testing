@@ -2,6 +2,7 @@ from enum import Enum, unique
 import usb.core
 import usb.util
 import sys
+import struct
 """
   /**
    * Custom constructor that takes in a port number and then checks each device
