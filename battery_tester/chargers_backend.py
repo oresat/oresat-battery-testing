@@ -36,10 +36,10 @@ from dataclasses import dataclass
 # Kosher commands to write to the chargers, taken from Libb6 Enum.hh
 @unique
 class Command(Enum):
-    GET_DEV_INFO = 0x57,
-    GET_SYS_INFO = 0x5A,
-    GET_CHARGE_INFO = 0x55,
-    UNK1 = 0x5F,
+    GET_DEV_INFO = 0x57
+    GET_SYS_INFO = 0x5A
+    GET_CHARGE_INFO = 0x55
+    UNK1 = 0x5F
     STOP_CHARGING = 0xFE
 
 # Lithium ion batteries only. Values copied from Device.cc in /archive/libb6
@@ -114,8 +114,8 @@ def start_charging(profile: ChargeProfile, CH1: str) -> bool:#Manually know whic
     # ids are placeholders
     charger1 = usb.core.find(custom_match=lambda d: d.port_numbers == path_to_tuple(CH1))
     #Make sure that usb is not being used for something else
-    if dev.is_kernel_driver_active(0):
-        dev.detach_kernel_driver(0)
+    if charger1.is_kernel_driver_active(0):
+        charger1.detach_kernel_driver(0)
     print(f"charger1 path is {charger1}")
     """
     devices = usb.core.find(find_all=True)
@@ -139,8 +139,9 @@ def start_charging(profile: ChargeProfile, CH1: str) -> bool:#Manually know whic
 
     # UNK1 appears to be a test where if it is 4, we must stop charging. It is checking if the data
     # is 4 bytes would be my guess
+    #Command.UNK1.value ----> .value extracts the int from an enum
     if charger1_endpoint is not None:
-        charger1_endpoint.write(Command.UNK1)  # For now, we're gonna assume that the charger
+        charger1_endpoint.write(Command.UNK1.value)  # For now, we're gonna assume that the charger
                                                # corrects for this, we'll test later
         # if (buffer is at 4 (uint8s) so if buffer is at one byte then stop charging)
         # stop charging under certain conditions, might be a safety check
