@@ -13,8 +13,17 @@ From an enum class:
     GET_DEV_INFO = 0x57,
     GET_SYS_INFO = 0x5a,
     GET_CHARGE_INFO = 0x55,
-    UNK1 = 0x5f [Checks packet size...]
+    UNK1 = 0x5f 
     STOP_CHARGING  = 0xfe,
+
+SEE ME HERE!
+Alright, here is how to proceed:
+Start by packaging UNK1 and sending it with endpoint_write (package with python struct)
+Then get a return value and if it is 4, stop charging (requires packaging that cmd and sending)
+Then package all of the profile data and then send the checksum followed by the actual package
+    this should start_charging
+
+Note that the checksum is created by summing all of the byte array except for the first 2 bytes
   
 _____TESTED, SHOULD BE GOOD
 labjack_backend.py 

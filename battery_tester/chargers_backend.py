@@ -141,6 +141,8 @@ def start_charging(profile: ChargeProfile, CH1: str) -> bool:#Manually know whic
     # is 4 bytes would be my guess
     #Command.UNK1.value ----> .value extracts the int from an enum
     if charger1_endpoint is not None:
+        buffer = bytearray()
+
         charger1_endpoint.write(Command.UNK1.value)  # For now, we're gonna assume that the charger
                                                # corrects for this, we'll test later
         # if (buffer is at 4 (uint8s) so if buffer is at one byte then stop charging)
@@ -159,6 +161,7 @@ def start_charging(profile: ChargeProfile, CH1: str) -> bool:#Manually know whic
         charger1_endpoint.write([0, 0, 0, 0])  # Figure out what this is for, UA
     else:
         print("The endpoint is null. Something might be disconnected.")
+
 
 
 """
