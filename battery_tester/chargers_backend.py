@@ -103,7 +103,7 @@ def path_to_tuple(path: str):
 # Note that this merely tells the chargers to "do something". By default they will charge.
 # To discharge, you will still call this function but you will first set the chargemode to discharge.
 ########Use lambda to iterate through chargers and find the right path that is entered by user
-
+#ALSO, REMEMBER TO use lsusb to make sure that all four battery chargers are accounted for
 def send_command(endpoint_out, endpoint_in, cmd):
     packet = bytearray([0x0f, 0x03, cmd.value, 0x00])
     checksum = sum(packet[2:]) & 0xFF
@@ -135,11 +135,16 @@ def start_charging(profile: ChargeProfile, CH1: str) -> bool:
 
     if charger1 is None:
         raise ValueError("Charger 1 not found!")
-
+    
+    #This section deals with the myriad of problems pertaining to:
+    #linux automatically binding the charger devices
     if charger1.is_kernel_driver_active(0):
         charger1.detach_kernel_driver(0)
 
+    usb.util.dispose_resources(charger1)
+
     charger1.set_configuration()#There is only one config for now
+    usb.util.claim_interface(charger1, 0)
 
     charger1_config = charger1.get_active_configuration()
     charger1_interface = charger1_config[(0, 0)]
