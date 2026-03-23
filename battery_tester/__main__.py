@@ -33,22 +33,22 @@ if __name__ == "__main__":
     else:
         print("Input error. Restart and enter a 1 or 0.\n")
         exit()
-    
+
     charger_choice = input("Enter the charger you want to charge with: A, B, C, or D:\n")
-    print(f"THE PATH IS {paths[0]} and THE CHARGER CHOICE IS {charger_choice}\n\n")
+    print(f"THE CHARGER CHOICE IS {charger_choice}\n\n")
     if charger_choice.upper() == 'A':
-        CHR.start_charging(CHR.ChargeProfile, paths[0])
+        CHR.start_charging(CHR.ChargeProfile(), paths[0])
     elif charger_choice.upper() == 'B':
-        CHR.start_charging(CHR.ChargeProfile, paths[1])
+        CHR.start_charging(CHR.ChargeProfile(), paths[1])
     elif charger_choice.upper() == 'C':
-        CHR.start_charging(CHR.ChargeProfile, paths[2])
+        CHR.start_charging(CHR.ChargeProfile(), paths[2])
     elif charger_choice.upper() == 'D':
-        CHR.start_charging(CHR.ChargeProfile, paths[3])
+        CHR.start_charging(CHR.ChargeProfile(), paths[3])
     else:
         print("Input error. Restart.\n")
         exit()
 
-    time.sleep(3)
+    time.sleep(600)
     for cell in range(4):
         TestData = LBJ.get_data_from_one_cell(LBJ.MeasureProfile, 3, cell)
         print(f"Temperature of Bank 3, Cell {cell} is: {TestData.temperature}\n")
